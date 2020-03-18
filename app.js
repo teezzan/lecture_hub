@@ -13,4 +13,8 @@ app.use('/api/users', UserController);
 var AuthController = require(__root + 'auth/AuthController');
 app.use('/api/auth', AuthController);
 
+
+var GroupController = require(__root + 'group/GroupController');
+app.use('/api/group', GroupController);
+
 module.exports = app;
