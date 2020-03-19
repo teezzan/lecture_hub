@@ -42,8 +42,6 @@ router.put('/:id',  VerifyToken, function (req, res) {
     // Group.findById(req.params.id, function (err, group) {
         if (err) return res.status(500).send("There was a problem finding the group.");
         
-        console.log("I am aAA");
-
         if (!group) { 
             res.status(404).send("No group found.");
             return;}
@@ -51,12 +49,10 @@ router.put('/:id',  VerifyToken, function (req, res) {
         if (!(JSON.parse([group.admin]).includes(req.userId))) { 
             res.status(401).send("You have no authorization");
             return;}
-        console.log("I am here");
         // delete req.body.admin;
         Group.findByIdAndUpdate(req.params.id, req.body , {new: true}, function (err, group) {
             if (err) return res.status(500).send("There was a problem updating the group.");
                 res.status(200).send(group);
-                console.log("HERE TOO");
                 return;
         });    
 
@@ -66,13 +62,6 @@ router.put('/:id',  VerifyToken, function (req, res) {
 
 });
 
-// router.post('/:id',  VerifyToken, function (req, res) {
-    
-//     Group.findByIdAndUpdate(req.params.id, req.body, {new: true}, function (err, group) {
-//         if (err) return res.status(500).send("There was a problem updating the group.");
-//         res.status(200).send(group);
-//     });
-// });
 
 router.delete('/:id', VerifyToken, function (req, res) {
     Group.findById(req.params.id, function (err, group) {
