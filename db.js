@@ -1,4 +1,7 @@
 var mongoose = require('mongoose');
+const crypto = require("crypto");
+const multer = require("multer");
+const GridFsStorage = require("multer-gridfs-storage");
 
 // mongoose.connect('mongodb+srv://adminlove:t%40ye1234@skrypt-sbitd.mongodb.net/test?retryWrites=true&w=majority', {
 mongoose.connect('mongodb://localhost:27017/mydb', {
@@ -11,3 +14,4 @@ mongoose.connect('mongodb://localhost:27017/mydb', {
         console.log('created successfully');
     }
 });
+
