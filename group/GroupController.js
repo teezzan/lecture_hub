@@ -3,6 +3,8 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 
 var VerifyToken = require('../auth/VerifyToken');
+var VerifyAdmin = require('../auth/VerifyAdmin');
+
 
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
@@ -157,14 +159,18 @@ router.get('/info/:id', function(req, res, next) {
   //add admin
   //fetch downlod list
 
-  router.post("/upload/:id", VerifyToken, upload.single("file"), (req, res) => {
+
+//vanilla upload or not
+router.post("/upload", VerifyToken, upload.single("file"), (req, res) => {
     console.log({file : req.file});
     // res.json({file : req.file})
     // res.redirect("/");
     res.status(200).send("success");
   });
   
-  router.get("/media/:filename", VerifyToken, (req, res) => {
+
+ //Vanilla for getting and downloading from common repo 
+router.get("/media/:id/:filename", VerifyToken, (req, res) => {
     // console.log('id', req.params.id)
     const file = gfs
         .find({
@@ -180,7 +186,7 @@ router.get('/info/:id', function(req, res, next) {
         });
   });
 
-  
+ //get list of media vanilla. not exposed
 router.get("/media", VerifyToken, (req, res) => {
     const file =gfs.find().toArray((err, files) => {
         // check if files
@@ -194,13 +200,13 @@ router.get("/media", VerifyToken, (req, res) => {
     });
 });
     
-  
+// vanilla delete... To make another for deleting stuff on group
 router.post("/media/del/:id", VerifyToken, (req, res) => {
-gfs.delete(new mongoose.Types.ObjectId(req.params.id), (err, data) => {
-    if (err) return res.status(404).json({ err: err.message });
-    // res.redirect("/");
-    res.status(200).send("success");
-});
+    gfs.delete(new mongoose.Types.ObjectId(req.params.id), (err, data) => {
+        if (err) return res.status(404).json({ err: err.message });
+        // res.redirect("/");
+        res.status(200).send("success");
+    });
 });
     /////////////////////////////////
   
