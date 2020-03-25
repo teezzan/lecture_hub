@@ -77,12 +77,13 @@ router.post('/register', VerifyToken, function(req, res) {
     Group.create({
         name : req.body.name,
         description : req.body.description,
-        admin : JSON.stringify([req.userId])
+        admin : JSON.stringify([req.userId]),
+        media : "[]"
       }, 
 
       function (err, group) {
         if (err) return res.status(500).send("There was a problem creating the group`.");
-        
+        console.log(group);
         res.status(200).send(group);
       });
     
@@ -90,7 +91,7 @@ router.post('/register', VerifyToken, function(req, res) {
 
 
 //edit group info
-router.put('/:id',  VerifyToken, function (req, res) {
+router.put('/:id',  VerifyToken, VerifyAdmin, function (req, res) {
     
 
     Group.findOne({ _id: req.params.id }, function (err, group) {
@@ -104,7 +105,8 @@ router.put('/:id',  VerifyToken, function (req, res) {
         if (!(JSON.parse([group.admin]).includes(req.userId))) { 
             res.status(401).send("You have no authorization");
             return;}
-        // delete req.body.admin;
+         delete req.body.upload;
+         delete req.body.admin;
         Group.findByIdAndUpdate(req.params.id, req.body , {new: true}, function (err, group) {
             if (err) return res.status(500).send("There was a problem updating the group.");
                 res.status(200).send(group);
@@ -118,7 +120,7 @@ router.put('/:id',  VerifyToken, function (req, res) {
 });
 
 //delete group
-router.delete('/:id', VerifyToken, function (req, res) {
+router.delete('/:id', VerifyToken, VerifyAdmin, function (req, res) {
     Group.findById(req.params.id, function (err, group) {
         if (err) return res.status(500).send("There was a problem finding the group.");
         if (!group) return res.status(404).send("No group found.");
@@ -133,12 +135,12 @@ router.delete('/:id', VerifyToken, function (req, res) {
 });
 });
 
-// router.get('/', function (req, res) {
-//     Group.find({}, function (err, group) {
-//         if (err) return res.status(500).send("There was a problem finding the groups.");
-//         res.status(200).send(group);
-//     });
-// });
+router.get('/', function (req, res) {
+    Group.find({}, function (err, group) {
+        if (err) return res.status(500).send("There was a problem finding the groups.");
+        res.status(200).send(group);
+    });
+});
 
 
 //get group info
@@ -147,7 +149,8 @@ router.get('/info/:id', function(req, res, next) {
     Group.findById(req.params.id, function (err, group) {
       if (err) return res.status(500).send("There was a problem finding the group.");
       if (!group) return res.status(404).send("No group found.");
-      res.status(200).send(group);
+       res.status(200).send(group);
+      //res.status(200).send(JSON.parse(group.media)[0]);
     });
   
   });
@@ -161,11 +164,42 @@ router.get('/info/:id', function(req, res, next) {
 
 
 //vanilla upload or not
-router.post("/upload", VerifyToken, upload.single("file"), (req, res) => {
-    console.log({file : req.file});
+router.post("/upload/:id", VerifyToken, VerifyAdmin, upload.single("file"), (req, res) => {
     // res.json({file : req.file})
     // res.redirect("/");
-    res.status(200).send("success");
+    var file_info = {
+      id : req.file.id,
+      filename : req.file.filename,
+      content_type : req.file.contentType,
+      upload_date : req.file.uploadDate
+    }
+    
+    // console.log(file_info);
+
+    Group.findOne({ _id: req.params.id }, function (err, group) {
+      // Group.findById(req.params.id, function (err, group) {
+          if (err) return res.status(500).send("There was a problem finding the group.");
+          
+          if (!group) { 
+              res.status(404).send("No group found.");
+              return;}
+                     
+          var temp_media = JSON.toString([file_info]);
+          console.log(temp_media);
+          var temp_obj = {media : temp_media}
+          //here is the problem
+
+          Group.findByIdAndUpdate(req.params.id, temp_obj , {new: true}, function (err, group) {
+              if (err) return res.status(500).send("There was a problem updating the group.");
+                res.status(200).send("success");
+                return;
+          });    
+  
+          
+          });
+
+
+    
   });
   
 

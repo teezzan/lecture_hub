@@ -4,7 +4,7 @@ const multer = require("multer");
 const GridFsStorage = require("multer-gridfs-storage");
 
 // mongoose.connect('mongodb+srv://adminlove:t%40ye1234@skrypt-sbitd.mongodb.net/test?retryWrites=true&w=majority', {
-mongoose.connect('mongodb://localhost:27017/mydb', {
+mongoose.connect('mongodb://localhost:27017/mydbtest', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }, (error) => {
