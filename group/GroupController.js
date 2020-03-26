@@ -150,7 +150,6 @@ router.get('/info/:id', function(req, res, next) {
       if (err) return res.status(500).send("There was a problem finding the group.");
       if (!group) return res.status(404).send("No group found.");
        res.status(200).send(group);
-      //res.status(200).send(JSON.parse(group.media)[0]);
     });
   
   });
@@ -184,9 +183,10 @@ router.post("/upload/:id", VerifyToken, VerifyAdmin, upload.single("file"), (req
               res.status(404).send("No group found.");
               return;}
                      
-          var temp_media = JSON.toString([file_info]);
-          console.log(temp_media);
-          var temp_obj = {media : temp_media}
+          // var temp_media = JSON.toString([file_info]);
+          // console.log(temp_media);
+          group.media.push(file_info)
+          var temp_obj = {media : group.media}
           //here is the problem
 
           Group.findByIdAndUpdate(req.params.id, temp_obj , {new: true}, function (err, group) {

@@ -3,7 +3,7 @@ var GroupSchema = new mongoose.Schema({
   name: String,
   description: String,
   admin: String,
-  media: String
+  media: Array
 });
 mongoose.model('Group', GroupSchema);
 
