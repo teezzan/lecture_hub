@@ -166,11 +166,14 @@ router.get('/info/:id', function(req, res, next) {
 router.post("/upload/:id", VerifyToken, VerifyAdmin, upload.single("file"), (req, res) => {
     // res.json({file : req.file})
     // res.redirect("/");
+    console.log(req);
     var file_info = {
+      title : req.body.title,
       id : req.file.id,
       filename : req.file.filename,
       content_type : req.file.contentType,
-      upload_date : req.file.uploadDate
+      upload_date : req.file.uploadDate,
+      size : req.file.size
     }
     
     // console.log(file_info);
@@ -182,16 +185,12 @@ router.post("/upload/:id", VerifyToken, VerifyAdmin, upload.single("file"), (req
           if (!group) { 
               res.status(404).send("No group found.");
               return;}
-                     
-          // var temp_media = JSON.toString([file_info]);
-          // console.log(temp_media);
+          
           group.media.push(file_info)
-          var temp_obj = {media : group.media}
-          //here is the problem
-
-          Group.findByIdAndUpdate(req.params.id, temp_obj , {new: true}, function (err, group) {
+          
+          Group.findByIdAndUpdate(req.params.id, {media : group.media}, {new: true}, function (err, groups) {
               if (err) return res.status(500).send("There was a problem updating the group.");
-                res.status(200).send("success");
+                res.status(200).send(groups);
                 return;
           });    
   
@@ -204,8 +203,7 @@ router.post("/upload/:id", VerifyToken, VerifyAdmin, upload.single("file"), (req
   
 
  //Vanilla for getting and downloading from common repo 
-router.get("/media/:id/:filename", VerifyToken, (req, res) => {
-    // console.log('id', req.params.id)
+router.get("/media/:filename", VerifyToken, (req, res) => {
     const file = gfs
         .find({
         filename: req.params.filename
@@ -220,6 +218,8 @@ router.get("/media/:id/:filename", VerifyToken, (req, res) => {
         });
   });
 
+
+  
  //get list of media vanilla. not exposed
 router.get("/media", VerifyToken, (req, res) => {
     const file =gfs.find().toArray((err, files) => {
@@ -235,12 +235,40 @@ router.get("/media", VerifyToken, (req, res) => {
 });
     
 // vanilla delete... To make another for deleting stuff on group
-router.post("/media/del/:id", VerifyToken, (req, res) => {
-    gfs.delete(new mongoose.Types.ObjectId(req.params.id), (err, data) => {
-        if (err) return res.status(404).json({ err: err.message });
-        // res.redirect("/");
-        res.status(200).send("success");
-    });
+router.post("/media/del/:id", VerifyToken, VerifyAdmin, (req, res) => {
+
+  Group.findOne({ _id: req.params.id }, function (err, group) {
+    // Group.findById(req.params.id, function (err, group) {
+        if (err) return res.status(500).send("There was a problem finding the group.");
+        
+        if (!group) { 
+            res.status(404).send("No group found. Delete failed");
+            return;}
+        
+        if((group.media.length > req.body.index) && (group.media[req.body.index].id == req.body.media_id)){
+            group.media.splice(req.body.index, 1);}
+        else{return res.status(500).send("File does not match");}
+        
+        Group.findByIdAndUpdate(req.params.id, {media : group.media}, {new: true}, function (err, groups) {
+            if (err) return res.status(500).send("There was a problem updating the group.");
+
+
+            gfs.delete(new mongoose.Types.ObjectId(req.body.media_id), (err, data) => {
+                if (err) return res.status(404).json({ err: err.message });
+                // res.redirect("/");
+                
+                res.status(200).send(" Deleted file succssfully");
+            });
+    
+        });    
+});
+
+
+
+
+
+
+    
 });
     /////////////////////////////////
   
