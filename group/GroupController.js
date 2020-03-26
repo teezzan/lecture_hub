@@ -35,6 +35,11 @@ const conn = mongoose.createConnection(mongoURI, {
   useUnifiedTopology: true
 });
 
+function remove_media(value, index, array) {
+  delete value.media;
+  console.log(value);
+  return value;
+}
 
 // init gfs
 let gfs;
@@ -135,15 +140,18 @@ router.delete('/:id', VerifyToken, VerifyAdmin, function (req, res) {
 });
 });
 
-router.get('/', function (req, res) {
+// gives list of groups
+router.get('/',  function (req, res) {
     Group.find({}, function (err, group) {
         if (err) return res.status(500).send("There was a problem finding the groups.");
+        // var group2 = group.map(remove_media);
+        // // console.log(group2);    
         res.status(200).send(group);
     });
 });
 
 
-//get group info
+//get group info and uploaded media info
 router.get('/info/:id', function(req, res, next) {
 
     Group.findById(req.params.id, function (err, group) {
@@ -234,7 +242,7 @@ router.get("/media", VerifyToken, (req, res) => {
     });
 });
     
-// vanilla delete... To make another for deleting stuff on group
+//delete... To make another for deleting stuff on group
 router.post("/media/del/:id", VerifyToken, VerifyAdmin, (req, res) => {
 
   Group.findOne({ _id: req.params.id }, function (err, group) {
