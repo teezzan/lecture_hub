@@ -83,7 +83,7 @@ router.post('/register', VerifyToken, function(req, res) {
         name : req.body.name,
         description : req.body.description,
         admin : JSON.stringify([req.userId]),
-        media : "[]"
+        media : []
       }, 
 
       function (err, group) {
@@ -142,10 +142,8 @@ router.delete('/:id', VerifyToken, VerifyAdmin, function (req, res) {
 
 // gives list of groups
 router.get('/',  function (req, res) {
-    Group.find({}, function (err, group) {
-        if (err) return res.status(500).send("There was a problem finding the groups.");
-        // var group2 = group.map(remove_media);
-        // // console.log(group2);    
+    Group.find({}, { media : 0 },function (err, group) {
+        if (err) return res.status(500).send("There was a problem finding the groups.");   
         res.status(200).send(group);
     });
 });
