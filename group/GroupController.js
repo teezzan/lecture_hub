@@ -302,6 +302,39 @@ router.get("/:id/sub", VerifyToken, (req,res) =>{
 
 
 });
+
+
+
+router.get("/:id/unsub", VerifyToken, (req,res) =>{
+
+
+  Group.findById(req.params.id, function (err, group) {
+    if (err) return res.status(500).send("There was a problem finding the group.");
+    if (!group) return res.status(404).send("No group found.");
+
+    
+    group.subcribers.splice(group.subcribers.indexOf(req.userId), 1);
+    Group.findByIdAndUpdate(req.params.id, {subcribers : group.subcribers}, {new: true}, function (err, groups) {
+      if (err) return res.status(500).send("There was a problem updating the group.");
+
+      User.findById(req.userId, function (err, user) {
+        if (err) return res.status(500).send("There was a problem finding the user.");
+        if (!user) return res.status(404).send("No user found.");
+
+        user.sub.splice(user.sub.indexOf(groups._id), 1);
+
+        User.findByIdAndUpdate(req.userId, {sub : user.sub}, {new: true}, function (err, users) {
+            if (err) return res.status(500).send("There was a problem updating the user.");
+          res.status(200).send(users);
+          });
+    });
+        
+  }); 
+
+  });
+
+
+});
     /////////////////////////////////
   
 module.exports = router;
