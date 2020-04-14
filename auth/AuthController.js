@@ -99,8 +99,8 @@ router.get('/forget-password/:email', function(req, res) {
 
     // return the information including token as JSON
     //send_email_template({ auth: true, token: token })
-    // res.status(200).send("Sent to Email");
-    res.status(200).send({ auth: true, token: token });
+    res.status(200).send("Sent to Email");
+    // res.status(200).send({ auth: true, token: token });
   });
 
 });
