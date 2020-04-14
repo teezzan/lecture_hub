@@ -1,0 +1,25 @@
+body{
+    background-color: aquamarine;
+    font-family: 'Courier New', Courier, monospace;
+    text-align: left;
+}
+#signup{
+    background-color: cornflowerblue;
+}
+h1{
+    border-radius: 5px;
+    border-style: dotted;
+    border-color: green;
+    background-color: rgba(25, 150, 225, 0.6);
+}
+input{
+    padding: 10px, 10px, 10px, 10px;
+    border: solid;
+    border-color: indigo;
+
+}
+div.box{
+    height: 200px;
+    width: 600px;
+    background-color: red;
+}
