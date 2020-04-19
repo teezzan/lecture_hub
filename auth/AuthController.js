@@ -131,13 +131,13 @@ router.post('/forget-password', function (req, res) {
     // // create a token
     const token = crypto.randomBytes(20).toString('hex');
 
-    User.findByIdAndUpdate(user._id, { resetPasswordToken: token, resetPasswordExpires: Date.now() + 3600000 }, { new: true }, function (err, user) {
+    User.findByIdAndUpdate(user._id, { resetPasswordToken: token, resetPasswordExpires: (Date.now() + 36000000) }, { new: true }, function (err, user) {
       if (err) return res.status(500).send("There was a problem retriving account.");
 
 
       // return the information including token as JSON
       var link = `http://localhost:3000/api/auth/reset/${token}`;
-      send_mail(user.email, `<div><h2><b> Reset Your Password </b></h2>	<p>You attempted to change the Password for your Halqoh account.Click <a href="${link}"><input type="button" value="Here"></a> and You will be redirected to a page where you can change your Password.<hr>If you did not request to change your Password, kindly ignore. <br>Thank you.</p></div>`);
+      send_mail(user.email, `<div><h2><b> Reset Your Password </b></h2>	<p>You attempted to change the Password for your Halqoh account.\n\nClick <a href="${link}"><input type="button" value="Here"></a> and You will be redirected to a page where you can change your Password.<hr>If you did not request to change your Password, kindly ignore. <br>Thank you.</p></div>`);
       res.status(200).send("Sent to Email");
     });
   });
@@ -148,12 +148,12 @@ router.post('/forget-password', function (req, res) {
 
 
 router.get('/reset/:key', function (req, res) {
+  console.log(req.params.key);
   User.findOne({
-    resetPasswordToken: req.params.key//,  resetPasswordExpires: Date.now
-
-  }, function (err, users) {
-    if (err) return res.status(500).send("token expired");
-    res.status(200).send("token active");
+    resetPasswordToken: req.params.key,  resetPasswordExpires: {$lte : Date.now()} }, function (err, users) {
+    if (err) return res.status(500).send(err.message);
+    if(!users) return res.status(500).send("Token expired");
+    res.status(200).send(`token active`);
   });
 });
 
@@ -171,10 +171,11 @@ router.put('/reset', function (req, res) {
   }
   var hashedPassword = bcrypt.hashSync(req.body.password, 8);
   User.findOneAndUpdate({
-    resetPasswordToken: req.body.resetPasswordToken//,  resetPasswordExpires: Date.now
+    resetPasswordToken: req.body.resetPasswordToken//,  resetPasswordExpires: {$gt : Date.now()}
   }, { password: hashedPassword, resetPasswordToken: null, resetPasswordExpires: null },
     function (err, users) {
       if (err) return res.status(500).send("There was a problem changing password.");
+      if (!users) return res.status(500).send("User not found.");
       res.status(200).send("Password changed successfully");
       return;
     });
