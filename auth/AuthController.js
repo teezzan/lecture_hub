@@ -85,15 +85,17 @@ router.post('/register', function (req, res) {
 
       // if user is registered without errors
       // create a token
-      var token = jwt.sign({ id: user._id }, config.secret, {
-        expiresIn: 900 // expires in 15 minutes
-      });
-      //send email
-      var link = `http://localhost:3000/api/auth/verify/${token}`;
-      send_mail(`<div><h2><b> Verify your Account </b></h2> <hr></br>	<p>You attempted to Create an Halqoh account.</br>Click <a href="${link}"><input type="button" value="Here"></a> to verify your email.<hr>If you did not attempt to create an Halqoh account, kindly ignore. <br>Thank you.</p></div>`);
-      res.status(200).send("Verification link Sent to Email");
-    });
+      const token = crypto.randomBytes(20).toString('hex');
 
+      User.findByIdAndUpdate(user._id, { resetPasswordToken: token, resetPasswordExpires: (Date.now() + 36000000) }, { new: true }, function (err, user) {
+        if (err) return res.status(500).send("There was a problem setting up verification.");
+
+        //send email
+        var link = `http://localhost:3000/api/auth/verify/${token}`;
+        send_mail(user.email, `<div><h2><b> Verify your Account </b></h2> <hr></br>	<p>You attempted to Create an Halqoh account.</br>Click <a href="${link}"><input type="button" value="Here"></a> to verify your email.<hr>If you did not attempt to create an Halqoh account, kindly ignore. <br>Thank you.</p></div>`);
+        res.status(200).send("Verification link Sent to Email");
+      });
+    });
 });
 
 router.get('/me', VerifyToken, function (req, res, next) {
@@ -106,13 +108,16 @@ router.get('/me', VerifyToken, function (req, res, next) {
 
 });
 
-router.get('/verify/:key', VerifyTokenExt, function (req, res) {
-  console.log("req.userId");
-  User.findByIdAndUpdate(req.userId, { verified: true }, { new: true }, function (err, user) {
-    if (err) return res.status(500).send("Invalid Request.");
-    if (!user) return res.status(404).send("No Such User found.");
-    res.status(200).send("Email Verification Successful. Login With your details");
-  });
+router.get('/verify/:key', function (req, res) {
+  User.findOneAndUpdate({ resetPasswordToken: req.params.key, resetPasswordExpires: { $gte: Date.now() }
+},{ verified: true, resetPasswordExpires: null, resetPasswordToken: null }, function (err, user) {
+      if (err) return res.status(500).send("Invalid token.");
+      if (!user) return res.status(404).send("No Such User found.");
+      res.status(200).send("Email Verification Successful. Login With your details");
+    });
+
+
+
 
 });
 
@@ -150,9 +155,10 @@ router.post('/forget-password', function (req, res) {
 router.get('/reset/:key', function (req, res) {
   console.log(req.params.key);
   User.findOne({
-    resetPasswordToken: req.params.key,  resetPasswordExpires: {$lte : Date.now()} }, function (err, users) {
+    resetPasswordToken: req.params.key, resetPasswordExpires: { $gte: Date.now() }
+  }, function (err, users) {
     if (err) return res.status(500).send(err.message);
-    if(!users) return res.status(500).send("Token expired");
+    if (!users) return res.status(500).send("Token expired");
     res.status(200).send(`token active`);
   });
 });
@@ -171,7 +177,7 @@ router.put('/reset', function (req, res) {
   }
   var hashedPassword = bcrypt.hashSync(req.body.password, 8);
   User.findOneAndUpdate({
-    resetPasswordToken: req.body.resetPasswordToken//,  resetPasswordExpires: {$gt : Date.now()}
+    resetPasswordToken: req.body.resetPasswordToken, resetPasswordExpires: { $gte: Date.now() }
   }, { password: hashedPassword, resetPasswordToken: null, resetPasswordExpires: null },
     function (err, users) {
       if (err) return res.status(500).send("There was a problem changing password.");
