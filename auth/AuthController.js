@@ -18,6 +18,36 @@ var bcrypt = require('bcryptjs');
 var config = require('../config'); // get config file
 
 
+/**
+ * @swagger
+ * definitions:
+ *   User:
+ *     required:
+ *       - email
+ *       - password
+ *     properties:
+  *       _id:
+ *         type: string
+ *         example: 5e9cdd83e4d51f18624c7753
+ *       name:
+ *         type: string
+ *         example: John Doe
+ *       email:
+ *         type: string
+ *         example: JohnDoe@mail.com
+ *       sub:
+ *         type: array
+ *         example: [5e9cdd83e4d51f18624c7753, 4d51f18625e9cdd83e4c7753]
+ *       verified:
+ *         type: string
+ *         example: true
+ *       blocked:
+ *         type: string
+ *         example: false  
+ */
+
+
+
 function send_mail(recipient, x) {
   const transporter = nodemailer.createTransport({
     port: 25,
@@ -43,6 +73,58 @@ function send_mail(recipient, x) {
   });
 }
 
+/**
+ * @swagger
+ *
+ * /login:
+ *   post:
+ *     description: Login to the application
+ *     summary: Login a user
+ *     tags:
+ *       - Users
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *               example: local@gmail.com
+ *             password:
+ *               type: string
+ *               format: password
+ *               example: local1234
+ *         required:
+ *           - email
+ *           - password
+ *     responses:
+ *       200:
+ *         description: login
+ *         schema:
+ *           type: object
+ *           properties:
+ *             auth:
+ *               type: boolean
+ *               example: true
+ *             token:
+ *               type: string
+ *               example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOTViYjE4MzE2YTliMWM1ZjYwYjdjMiIsImlhdCI6MTU4Njg5ODg3MywiZXhwIjoxNTg2ODk5NzczfQ.NlvxeIlJRQMytm-rFyz5sJjaDc5SO37bKJu2C6ny_pE
+ *       500:
+ *         description: login failed
+ *         schema:
+ *           type: object
+ *           properties:
+ *             auth:
+ *               type: boolean
+ *               example: false
+ *             token:
+ *               type: string
+ *               example: null
+ *         
+ */
 
 
 router.post('/login', function (req, res) {
@@ -67,9 +149,77 @@ router.post('/login', function (req, res) {
 
 });
 
+/**
+ * @swagger
+ *
+ * /logout:
+ *   get:
+ *     description: Logout the user from the application
+ *     summary: Logout a user
+ *     tags:
+ *       - Users
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Logout Successful
+ *         schema:
+ *           type: object
+ *           properties:
+ *             auth:
+ *               type: boolean
+ *               example: false
+ *             token:
+ *               type: string
+ *               example: null
+ *       500:
+ *         description: Internal Error
+ *         
+ *         
+ */
+
 router.get('/logout', function (req, res) {
   res.status(200).send({ auth: false, token: null });
 });
+
+/**
+ * @swagger
+ *
+ * /register:
+ *   post:
+ *     description: Register User to the application
+ *     summary: Register a user
+ *     tags:
+ *       - Users
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             name:
+ *               type: string
+ *             email:
+ *               type: string
+ *             password:
+ *               type: string
+ *               format: password
+ *         required:
+ *           - name
+ *           - email
+ *           - password
+ *     responses:
+ *       200:
+ *         description: registration successful. Verification email sent
+ *       500:
+ *         description: registration failed
+ *       401:
+ *         description: email required
+ *         
+ */
+
 
 router.post('/register', function (req, res) {
 
@@ -98,6 +248,33 @@ router.post('/register', function (req, res) {
     });
 });
 
+
+/**
+ * @swagger
+ * /me:
+ *   get:
+ *     tags:
+ *       - Users
+ *     name: Get User details
+ *     summary: Get User Details
+ *     security:
+ *       - bearerAuth: []
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       '200':
+ *         description: A single user object
+ *         schema:
+ *           type: object
+ *           $ref: '#/definitions/User'
+ *       '401':
+ *         description: No auth token / no user found in db with that name
+ *       '403':
+ *         description: JWT token and username from client don't match
+ */
+
 router.get('/me', VerifyToken, function (req, res, next) {
 
   User.findById(req.userId, { password: 0 }, function (err, user) {
@@ -108,17 +285,42 @@ router.get('/me', VerifyToken, function (req, res, next) {
 
 });
 
+/**
+ * @swagger
+ * /verify:
+ *   get:
+ *     tags:
+ *       - Users
+ *     name: Verifiy user email
+ *     summary: Helps verify user email during signup
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: query
+ *         name: token
+ *         schema:
+ *           type: string
+ *         required:
+ *           - token
+ *     responses:
+ *       '200':
+ *         description: Verification Successful
+ *       '401':
+ *         description: No auth token
+ *       '404':
+ *         description: No Such User found
+ */
+
 router.get('/verify/:key', function (req, res) {
-  User.findOneAndUpdate({ resetPasswordToken: req.params.key, resetPasswordExpires: { $gte: Date.now() }
-},{ verified: true, resetPasswordExpires: null, resetPasswordToken: null }, function (err, user) {
-      if (err) return res.status(500).send("Invalid token.");
-      if (!user) return res.status(404).send("No Such User found.");
-      res.status(200).send("Email Verification Successful. Login With your details");
-    });
-
-
-
-
+  User.findOneAndUpdate({
+    resetPasswordToken: req.params.key, resetPasswordExpires: { $gte: Date.now() }
+  }, { verified: true, resetPasswordExpires: null, resetPasswordToken: null }, function (err, user) {
+    if (err) return res.status(500).send("Invalid token.");
+    if (!user) return res.status(404).send("No Such User found.");
+    res.status(200).send("Email Verification Successful. Login With your details");
+  });
 });
 
 
@@ -163,8 +365,42 @@ router.get('/reset/:key', function (req, res) {
   });
 });
 
-router.get('/:id', function (req, res) {
-  User.findById(req.params.id, { password: 0 }, function (err, user) {
+
+/**
+ * @swagger
+ * /finduser:
+ *   get:
+ *     tags:
+ *       - Users
+ *     name: Find user
+ *     summary: Finds a user
+ *     security:
+ *       - bearerAuth: []
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required:
+ *           - id
+ *     responses:
+ *       '200':
+ *         description: A single user object
+ *         schema:
+ *           type: object
+ *           $ref: '#/definitions/User'
+ *       '401':
+ *         description: No auth token / no user found in db with that name
+ *       '403':
+ *         description: JWT token and username from client don't match
+ */
+
+router.get('/finduser/:id', function (req, res) {
+  User.findById(req.params.id, { password: 0, resetPasswordExpires: 0, resetPasswordToken: 0 }, function (err, user) {
     if (err) return res.status(500).send("There was a problem finding the user.");
     if (!user) return res.status(404).send("No user found.");
     res.status(200).send(user);
