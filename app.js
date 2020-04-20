@@ -1,12 +1,53 @@
 var express = require('express');
 var app = express();
 var db = require('./db');
+var swaggerJSDoc = require('swagger-jsdoc');
+var swaggerUi = require('swagger-ui-express');
 global.__root   = __dirname + '/'; 
 
 
 // // Middlewares
 // app.use(express.json());
 // app.set("view engine", "ejs");
+
+
+
+
+
+const swaggerDefinition = {
+  info: {
+    title: 'Halqoh Swagger API',
+    version: '1.0.0',
+    description: 'Endpoints to test the app routes',
+  },
+  host: 'localhost:3003',
+  basePath: '/',
+  securityDefinitions: {
+    bearerAuth: {
+      type: 'apiKey',
+      name: 'Authorization',
+      scheme: 'bearer',
+      in: 'header',
+    },
+  },
+};
+
+const options = {
+  swaggerDefinition,
+  apis: ['./auth/*.js', './group/*.js', './user/*.js'],
+};
+
+const swaggerSpec = swaggerJSDoc(options);
+
+app.get('/swagger.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+
+
 
 
 app.get('/api', function (req, res) {
