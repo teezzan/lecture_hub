@@ -386,7 +386,7 @@ router.post('/forget-password', function (req, res) {
 
 /**
  * @swagger
- * /reset/{key}:
+ * /reset/{resetPasswordToken}:
  *   get:
  *     tags:
  *       - Users
@@ -394,11 +394,12 @@ router.post('/forget-password', function (req, res) {
  *     summary: Helps to Check Token Authenticity before password change is allowed
  *     parameters:
  *       - in: path
- *         name: key
+ *         name: resetPasswordToken
  *         schema:
  *           type: string
+ *           example: 670a7c7e5eea7dd52c70e0fd575147af21b64af9
  *         required:
- *           - key
+ *           - resetPasswordToken
  *     responses:
  *       '200':
  *         description: Token Active
@@ -458,6 +459,43 @@ router.get('/finduser/:id', function (req, res) {
     res.status(200).send(user);
   });
 });
+
+
+/**
+ * @swagger
+ *
+ * /reset:
+ *   put:
+ *     description: Change User Password with token
+ *     summary: Used to Change User Password with token sent to the mail
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             resetPasswordToken:
+ *               type: string
+ *               example: 670a7c7e5eea7dd52c70e0fd575147af21b64af9
+ *             password:
+ *               type: string
+ *               format: password
+ *               example: passqwert1234
+ *         required:
+ *           - resetPasswordToken
+ *           - password
+ *     responses:
+ *       200:
+ *         description: Password changed successfully
+ *       500:
+ *         description: There was a problem changing password."
+ *       400:
+ *         description: email required
+ *         
+ */
+
 
 router.put('/reset', function (req, res) {
   if (req.body.password === '') {
