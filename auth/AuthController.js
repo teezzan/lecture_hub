@@ -324,6 +324,38 @@ router.get('/verify/:key', function (req, res) {
 });
 
 
+/**
+ * @swagger
+ * /forget-password:
+ *   post:
+ *     tags:
+ *       - Users
+ *     name: Retrieving User account
+ *     summary: For Retrieving User account. Email is sent to registered mail
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *               example: YusufT@gmail.com
+ *         required:
+ *           - email
+ *     responses:
+ *       '200':
+ *         description: Retrival link sent to Email
+ *       '500':
+ *         description: Internal Error
+ *       '403':
+ *         description: User not found
+ */
+
 router.post('/forget-password', function (req, res) {
   if (req.body.email === '') {
     return res.status(400).send('email required');
@@ -352,7 +384,29 @@ router.post('/forget-password', function (req, res) {
 });
 
 
-
+/**
+ * @swagger
+ * /reset/{key}:
+ *   get:
+ *     tags:
+ *       - Users
+ *     name: Check Token Authenticity
+ *     summary: Helps to Check Token Authenticity before password change is allowed
+ *     parameters:
+ *       - in: path
+ *         name: key
+ *         schema:
+ *           type: string
+ *         required:
+ *           - key
+ *     responses:
+ *       '200':
+ *         description: Token Active
+ *       '500':
+ *         description: Internal server error
+ *       '403':
+ *         description: Token Expired.
+ */
 
 router.get('/reset/:key', function (req, res) {
   console.log(req.params.key);
@@ -368,20 +422,18 @@ router.get('/reset/:key', function (req, res) {
 
 /**
  * @swagger
- * /finduser:
+ * /finduser/{id}:
  *   get:
  *     tags:
  *       - Users
  *     name: Find user
  *     summary: Finds a user
- *     security:
- *       - bearerAuth: []
  *     consumes:
  *       - application/json
  *     produces:
  *       - application/json
  *     parameters:
- *       - in: query
+ *       - in: path
  *         name: id
  *         schema:
  *           type: string
@@ -393,10 +445,10 @@ router.get('/reset/:key', function (req, res) {
  *         schema:
  *           type: object
  *           $ref: '#/definitions/User'
- *       '401':
- *         description: No auth token / no user found in db with that name
+ *       '500':
+ *         description: Internal server error
  *       '403':
- *         description: JWT token and username from client don't match
+ *         description: No user found.
  */
 
 router.get('/finduser/:id', function (req, res) {
