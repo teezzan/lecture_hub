@@ -39,10 +39,10 @@ var config = require('../config'); // get config file
  *         type: array
  *         example: [5e9cdd83e4d51f18624c7753, 4d51f18625e9cdd83e4c7753]
  *       verified:
- *         type: string
+ *         type: boolean
  *         example: true
  *       blocked:
- *         type: string
+ *         type: boolean
  *         example: false  
  */
 
@@ -76,7 +76,7 @@ function send_mail(recipient, x) {
 /**
  * @swagger
  *
- * /login:
+ * /auth/login:
  *   post:
  *     description: Login to the application
  *     summary: Login a user
@@ -152,7 +152,7 @@ router.post('/login', function (req, res) {
 /**
  * @swagger
  *
- * /logout:
+ * /auth/logout:
  *   get:
  *     description: Logout the user from the application
  *     summary: Logout a user
@@ -185,7 +185,7 @@ router.get('/logout', function (req, res) {
 /**
  * @swagger
  *
- * /register:
+ * /auth/register:
  *   post:
  *     description: Register User to the application
  *     summary: Register a user
@@ -251,7 +251,7 @@ router.post('/register', function (req, res) {
 
 /**
  * @swagger
- * /me:
+ * /auth/me:
  *   get:
  *     tags:
  *       - Users
@@ -287,7 +287,7 @@ router.get('/me', VerifyToken, function (req, res, next) {
 
 /**
  * @swagger
- * /verify:
+ * /auth/verify:
  *   get:
  *     tags:
  *       - Users
@@ -326,7 +326,7 @@ router.get('/verify/:key', function (req, res) {
 
 /**
  * @swagger
- * /forget-password:
+ * /auth/forget-password:
  *   post:
  *     tags:
  *       - Users
@@ -386,7 +386,7 @@ router.post('/forget-password', function (req, res) {
 
 /**
  * @swagger
- * /reset/{resetPasswordToken}:
+ * /auth/reset/{resetPasswordToken}:
  *   get:
  *     tags:
  *       - Users
@@ -423,7 +423,7 @@ router.get('/reset/:key', function (req, res) {
 
 /**
  * @swagger
- * /finduser/{id}:
+ * /auth/finduser/{id}:
  *   get:
  *     tags:
  *       - Users
@@ -464,7 +464,7 @@ router.get('/finduser/:id', function (req, res) {
 /**
  * @swagger
  *
- * /reset:
+ * /auth/reset:
  *   put:
  *     description: Change User Password with token
  *     summary: Used to Change User Password with token sent to the mail

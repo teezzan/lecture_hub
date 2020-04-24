@@ -21,7 +21,7 @@ const swaggerDefinition = {
     description: 'Endpoints to test the app routes',
   },
   host: 'localhost:3000',
-  basePath: '/api/auth',
+  basePath: '/api',
   securityDefinitions: {
     bearerAuth: {
       type: 'apiKey',
