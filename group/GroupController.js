@@ -408,7 +408,7 @@ router.delete('/:id', VerifyToken, VerifyAdmin, function (req, res) {
 
 
 // gives list of groups
-router.get('/', function (req, res) {
+router.get('/',  cors(), function (req, res) {
   Group.find({}, { media: 0 }, function (err, group) {
     if (err) return res.status(500).send("There was a problem finding the groups.");
     res.status(200).send(group);
@@ -445,7 +445,7 @@ router.get('/', function (req, res) {
  *         
  */
 //get group info
-router.get('/:id', function (req, res, next) {
+router.get('/:id', cors(), function (req, res, next) {
   console.log(req.params.id)
   Group.findById(req.params.id, function (err, group) {
     if (err) return res.status(500).send("There was a problem finding the group.");
@@ -508,7 +508,7 @@ router.get('/:id', function (req, res, next) {
 
 
 //vanilla upload or not 
-router.post("/:id/upload", VerifyToken, VerifyAdmin, upload.single("file"), (req, res) => {
+router.post("/:id/upload", cors(), VerifyToken, VerifyAdmin, upload.single("file"), (req, res) => {
   // res.json({file : req.file})
   // res.redirect("/");
   console.log(req);
@@ -621,7 +621,7 @@ router.get("/info/media", cors(), (req, res) => {
 });
 
 //delete...
-router.post("/:id/media/del", VerifyToken, VerifyAdmin, (req, res) => {
+router.post("/:id/media/del",  cors(), VerifyToken, VerifyAdmin, (req, res) => {
 
   Group.findOne({ _id: req.params.id }, function (err, group) {
     // Group.findById(req.params.id, function (err, group) {
@@ -687,7 +687,7 @@ router.post("/:id/media/del", VerifyToken, VerifyAdmin, (req, res) => {
  */
 
 
-router.get("/:id/sub", VerifyToken, (req, res) => {
+router.get("/:id/sub", cors(), VerifyToken, (req, res) => {
 
 
   Group.findById(req.params.id, function (err, group) {
@@ -748,7 +748,7 @@ router.get("/:id/sub", VerifyToken, (req, res) => {
  *         
  */
 
-router.get("/:id/unsub", VerifyToken, (req, res) => {
+router.get("/:id/unsub", cors(), VerifyToken, (req, res) => {
 
 
   Group.findById(req.params.id, function (err, group) {

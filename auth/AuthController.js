@@ -5,6 +5,7 @@ const nodemailer = require('nodemailer');
 var VerifyToken = require('./VerifyToken');
 var VerifyTokenExt = require('./VerifyTokenExt');
 var crypto = require('crypto');
+var cors = require('cors');
 
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
@@ -127,8 +128,8 @@ function send_mail(recipient, x) {
  */
 
 
-router.post('/login', function (req, res) {
-
+router.post('/login', cors(), function (req, res) {
+  console.log(req);
   User.findOne({ email: req.body.email }, function (err, user) {
     if (err) return res.status(500).send('Error on the server.');
     if (!user) return res.status(404).send('No user found.');
@@ -178,7 +179,7 @@ router.post('/login', function (req, res) {
  *         
  */
 
-router.get('/logout', function (req, res) {
+router.get('/logout', cors(), function (req, res) {
   res.status(200).send({ auth: false, token: null });
 });
 
@@ -221,7 +222,7 @@ router.get('/logout', function (req, res) {
  */
 
 
-router.post('/register', function (req, res) {
+router.post('/register', cors(), function (req, res) {
 
   var hashedPassword = bcrypt.hashSync(req.body.password, 8);
 
@@ -275,7 +276,7 @@ router.post('/register', function (req, res) {
  *         description: JWT token and username from client don't match
  */
 
-router.get('/me', VerifyToken, function (req, res, next) {
+router.get('/me', cors(), VerifyToken, function (req, res, next) {
 
   User.findById(req.userId, { password: 0 }, function (err, user) {
     if (err) return res.status(500).send("There was a problem finding the user.");
@@ -313,7 +314,7 @@ router.get('/me', VerifyToken, function (req, res, next) {
  *         description: No Such User found
  */
 
-router.get('/verify/:key', function (req, res) {
+router.get('/verify/:key', cors(), function (req, res) {
   User.findOneAndUpdate({
     resetPasswordToken: req.params.key, resetPasswordExpires: { $gte: Date.now() }
   }, { verified: true, resetPasswordExpires: null, resetPasswordToken: null }, function (err, user) {
@@ -356,7 +357,7 @@ router.get('/verify/:key', function (req, res) {
  *         description: User not found
  */
 
-router.post('/forget-password', function (req, res) {
+router.post('/forget-password', cors(), function (req, res) {
   if (req.body.email === '') {
     return res.status(400).send('email required');
   }
@@ -409,7 +410,7 @@ router.post('/forget-password', function (req, res) {
  *         description: Token Expired.
  */
 
-router.get('/reset/:key', function (req, res) {
+router.get('/reset/:key', cors(), function (req, res) {
   console.log(req.params.key);
   User.findOne({
     resetPasswordToken: req.params.key, resetPasswordExpires: { $gte: Date.now() }
@@ -452,7 +453,7 @@ router.get('/reset/:key', function (req, res) {
  *         description: No user found.
  */
 
-router.get('/finduser/:id', function (req, res) {
+router.get('/finduser/:id', cors(), function (req, res) {
   User.findById(req.params.id, { password: 0, resetPasswordExpires: 0, resetPasswordToken: 0 }, function (err, user) {
     if (err) return res.status(500).send("There was a problem finding the user.");
     if (!user) return res.status(404).send("No user found.");
@@ -497,7 +498,7 @@ router.get('/finduser/:id', function (req, res) {
  */
 
 
-router.put('/reset', function (req, res) {
+router.put('/reset', cors(), function (req, res) {
   if (req.body.password === '') {
     return res.status(400).send('password cannot be empty');
   }

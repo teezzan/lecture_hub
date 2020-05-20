@@ -29,12 +29,12 @@ payload1 = JSON.parse(payload1);
 // });
 
 // RETURNS ALL THE USERS IN THE DATABASE
-router.get('/', cors(), function (req, res) {
-    // User.find({}, function (err, users) {
-    //     if (err) return res.status(500).send("There was a problem finding the users.");
-    //     res.status(200).send(users);
-    // });
-    res.status(200).send(payload3);
+router.get('/', cors(),  function (req, res) {
+    User.find({}, function (err, users) {
+        if (err) return res.status(500).send("There was a problem finding the users.");
+        res.status(200).send(users);
+    });
+    // res.status(200).send(payload3);
 });
 
 // GETS A SINGLE USER FROM THE DATABASE
