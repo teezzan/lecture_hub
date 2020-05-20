@@ -20,7 +20,7 @@ const swaggerDefinition = {
     version: '1.0.0',
     description: 'Endpoints to test the app routes',
   },
-  host: 'localhost:3000',
+  host: 'halqah.herokuapp.com',
   basePath: '/api',
   securityDefinitions: {
     bearerAuth: {
