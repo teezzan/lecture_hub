@@ -242,9 +242,10 @@ router.post('/register', cors(), function (req, res) {
         if (err) return res.status(500).send("There was a problem setting up verification.");
 
         //send email
-        var link = `http://localhost:3000/api/auth/verify/${token}`;
-        send_mail(user.email, `<div><h2><b> Verify your Account </b></h2> <hr></br>	<p>You attempted to Create an Halqoh account.</br>Click <a href="${link}"><input type="button" value="Here"></a> to verify your email.<hr>If you did not attempt to create an Halqoh account, kindly ignore. <br>Thank you.</p></div>`);
-        res.status(200).send("Verification link Sent to Email");
+        // var link = `http://localhost:3000/api/auth/verify/${token}`;
+        var link = `halqah.herokuapp.com/api/auth/verify/${token}`;
+        // send_mail(user.email, `<div><h2><b> Verify your Account </b></h2> <hr></br>	<p>You attempted to Create an Halqoh account.</br>Click <a href="${link}"><input type="button" value="Here"></a> to verify your email.<hr>If you did not attempt to create an Halqoh account, kindly ignore. <br>Thank you.</p></div>`);
+        res.status(200).send(`Verification link is ${link}`);
       });
     });
 });
@@ -376,9 +377,9 @@ router.post('/forget-password', cors(), function (req, res) {
 
 
       // return the information including token as JSON
-      var link = `http://localhost:3000/api/auth/reset/${token}`;
-      send_mail(user.email, `<div><h2><b> Reset Your Password </b></h2>	<p>You attempted to change the Password for your Halqoh account.\n\nClick <a href="${link}"><input type="button" value="Here"></a> and You will be redirected to a page where you can change your Password.<hr>If you did not request to change your Password, kindly ignore. <br>Thank you.</p></div>`);
-      res.status(200).send("Sent to Email");
+      var link = `halqah.herokuapp.com/api/auth/reset/${token}`;
+      // send_mail(user.email, `<div><h2><b> Reset Your Password </b></h2>	<p>You attempted to change the Password for your Halqoh account.\n\nClick <a href="${link}"><input type="button" value="Here"></a> and You will be redirected to a page where you can change your Password.<hr>If you did not request to change your Password, kindly ignore. <br>Thank you.</p></div>`);
+      res.status(200).send(`Sent to Email ===> ${link}`);
     });
   });
 

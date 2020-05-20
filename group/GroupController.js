@@ -28,8 +28,8 @@ const GridFsStorage = require("multer-gridfs-storage");
 const path = require("path");
 
 // DB
-// const mongoURI = 'mongodb://localhost:27017/mydb_media';
-const mongoURI = "mongodb://localhost:27017/node-file-upl";
+const mongoURI = 'mongodb+srv://adminlove:t%40ye1234@skrypt-sbitd.mongodb.net/test?retryWrites=true&w=majority';
+// const mongoURI = "mongodb://localhost:27017/node-file-upl";
 
 // connection
 const conn = mongoose.createConnection(mongoURI, {
