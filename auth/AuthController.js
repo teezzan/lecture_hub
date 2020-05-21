@@ -143,6 +143,9 @@ router.post('/login', cors(), function (req, res) {
     var token = jwt.sign({ id: user._id }, config.secret, {
       expiresIn: 86400 // expires in 24 hours
     });
+    delete user.password;
+    delete user.resetPasswordExpires;
+    delete user.resetPasswordToken;
 
     // return the information including token as JSON
     res.status(200).send({ auth: true, token: token, user: user });
