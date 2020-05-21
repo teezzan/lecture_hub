@@ -1,13 +1,14 @@
 var express = require('express');
 var app = express();
 var db = require('./db');
+var cors = require('cors');
 var swaggerJSDoc = require('swagger-jsdoc');
 var swaggerUi = require('swagger-ui-express');
 global.__root   = __dirname + '/'; 
 
 
 // // Middlewares
-// app.use(express.json());
+app.use(cors());
 // app.set("view engine", "ejs");
 
 
