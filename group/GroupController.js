@@ -509,7 +509,7 @@ router.get('/:id', cors(), function (req, res, next) {
 
 
 //vanilla upload or not 
-router.post("/:id/upload", cors(), VerifyToken, VerifyAdmin, upload.single("file"), (req, res) => {
+router.post("/:id/upload", cors(), /* VerifyToken, VerifyAdmin,*/ upload.single("file"), (req, res) => {
   // res.json({file : req.file})
   // res.redirect("/");
   console.log(req);
@@ -522,28 +522,28 @@ router.post("/:id/upload", cors(), VerifyToken, VerifyAdmin, upload.single("file
     upload_date: req.file.uploadDate,
     size: req.file.size
   }
-
+  res.status(200).send(file_info);
   // console.log(file_info);
 
-  Group.findOne({ _id: req.params.id }, function (err, group) {
-    // Group.findById(req.params.id, function (err, group) {
-    if (err) return res.status(500).send("There was a problem finding the group.");
+  // Group.findOne({ _id: req.params.id }, function (err, group) {
+  //   // Group.findById(req.params.id, function (err, group) {
+  //   if (err) return res.status(500).send("There was a problem finding the group.");
 
-    if (!group) {
-      res.status(404).send("No group found.");
-      return;
-    }
+  //   if (!group) {
+  //     res.status(404).send("No group found.");
+  //     return;
+  //   }
 
-    group.media.push(file_info)
+  //   group.media.push(file_info)
 
-    Group.findByIdAndUpdate(req.params.id, { media: group.media }, { new: true }, function (err, groups) {
-      if (err) return res.status(500).send("There was a problem updating the group.");
-      res.status(200).send(groups);
-      return;
-    });
+  //   Group.findByIdAndUpdate(req.params.id, { media: group.media }, { new: true }, function (err, groups) {
+  //     if (err) return res.status(500).send("There was a problem updating the group.");
+  //     res.status(200).send(groups);
+  //     return;
+  //   });
 
 
-  });
+  // });
 
 
 
