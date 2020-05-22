@@ -512,7 +512,7 @@ router.get('/:id', cors(), function (req, res, next) {
 router.post("/:id/upload", cors(), /* VerifyToken, VerifyAdmin,*/ upload.single("file"), (req, res) => {
   // res.json({file : req.file})
   // res.redirect("/");
-  console.log(req);
+  // console.log(req);
   var file_info = {
     title: req.body.title,
     lecturer: req.body.lecturer,
@@ -522,7 +522,7 @@ router.post("/:id/upload", cors(), /* VerifyToken, VerifyAdmin,*/ upload.single(
     upload_date: req.file.uploadDate,
     size: req.file.size
   }
-  res.status(200).send(file_info);
+  // res.status(200).send(file_info);
   // console.log(file_info);
 
   // Group.findOne({ _id: req.params.id }, function (err, group) {
@@ -536,11 +536,11 @@ router.post("/:id/upload", cors(), /* VerifyToken, VerifyAdmin,*/ upload.single(
 
   //   group.media.push(file_info)
 
-  //   Group.findByIdAndUpdate(req.params.id, { media: group.media }, { new: true }, function (err, groups) {
-  //     if (err) return res.status(500).send("There was a problem updating the group.");
-  //     res.status(200).send(groups);
-  //     return;
-  //   });
+    Group.findByIdAndUpdate(req.params.id, {$push :{ media: file_info }}, { new: true }, function (err, groups) {
+      if (err) return res.status(500).send("There was a problem Finding and updating the group.");
+      res.status(200).send(groups);
+      return;
+    });
 
 
   // });
