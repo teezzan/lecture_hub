@@ -4,7 +4,7 @@ var UserSchema = new mongoose.Schema({
   email: { type: String, unique: true },
   password: String,
   sub: Array,
-  verified : { type: Boolean, default: false },
+  verified : { type: Boolean, default: true },
   blocked : { type: Boolean, default: false },
   resetPasswordToken : String,
   resetPasswordExpires : { type: Date, default: Date.now }

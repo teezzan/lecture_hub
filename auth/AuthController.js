@@ -233,7 +233,6 @@ router.post('/register', cors(), function (req, res) {
     name: req.body.name,
     email: req.body.email,
     password: hashedPassword,
-    verified: true
   },
     function (err, user) {
       if (err) return res.status(500).send("There was a problem registering the user.");
