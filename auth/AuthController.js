@@ -232,7 +232,8 @@ router.post('/register', cors(), function (req, res) {
   User.create({
     name: req.body.name,
     email: req.body.email,
-    password: hashedPassword
+    password: hashedPassword,
+    verified: true
   },
     function (err, user) {
       if (err) return res.status(500).send("There was a problem registering the user.");
@@ -241,14 +242,14 @@ router.post('/register', cors(), function (req, res) {
       // create a token
       const token = crypto.randomBytes(20).toString('hex');
 
-      User.findByIdAndUpdate(user._id, { resetPasswordToken: token, resetPasswordExpires: (Date.now() + 36000000) }, { new: true }, function (err, user) {
+      User.findByIdAndUpdate(user._id, { resetPasswordToken: /*token*/null, resetPasswordExpires: /*(Date.now() + 36000000)*/ null }, { new: true }, function (err, user) {
         if (err) return res.status(500).send("There was a problem setting up verification.");
 
         //send email
         // var link = `http://localhost:3000/api/auth/verify/${token}`;
         var link = `halqah.herokuapp.com/api/auth/verify/${token}`;
         // send_mail(user.email, `<div><h2><b> Verify your Account </b></h2> <hr></br>	<p>You attempted to Create an Halqoh account.</br>Click <a href="${link}"><input type="button" value="Here"></a> to verify your email.<hr>If you did not attempt to create an Halqoh account, kindly ignore. <br>Thank you.</p></div>`);
-        res.status(200).send(`Verification link is ${link}`);
+        res.status(200).send(`Successful Registration`);
       });
     });
 });
@@ -282,12 +283,12 @@ router.post('/register', cors(), function (req, res) {
 
 router.get('/me', cors(), VerifyToken, function (req, res, next) {
 
-  User.findById(req.userId, { password: 0 }, function (err, user) {
+  User.findById(req.userId, { password: 0 ,resetPasswordExpires: 0, resetPasswordToken: 0}, function (err, user) {
     if (err) return res.status(500).send("There was a problem finding the user.");
     if (!user) return res.status(404).send("No user found.");
-    delete user.password;
-    delete user.resetPasswordExpires;
-    delete user.resetPasswordToken;
+    // delete user.password;
+    // delete user.resetPasswordExpires;
+    // delete user.resetPasswordToken;
 
     res.status(200).send(user);
   });
