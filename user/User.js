@@ -7,7 +7,7 @@ var UserSchema = new mongoose.Schema({
   verified : { type: Boolean, default: true },
   blocked : { type: Boolean, default: false },
   resetPasswordToken : String,
-  resetPasswordExpires : { type: Date, default: Date.now }
+  resetPasswordExpires : { type: Date, default: Date.now() }
 });
 mongoose.model('User', UserSchema);
 
