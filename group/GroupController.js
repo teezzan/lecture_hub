@@ -409,7 +409,7 @@ router.delete('/:id', VerifyToken, VerifyAdmin, function (req, res) {
 
 
 // gives list of groups
-router.get('/',  cors(), function (req, res) {
+router.get('/', cors(), function (req, res) {
   Group.find({}, { media: 0 }, function (err, group) {
     if (err) return res.status(500).send("There was a problem finding the groups.");
     res.status(200).send(group);
@@ -536,11 +536,11 @@ router.post("/:id/upload", cors(), /* VerifyToken, VerifyAdmin,*/ upload.single(
 
   //   group.media.push(file_info)
 
-    Group.findByIdAndUpdate(req.params.id, {$push :{ media: file_info }}, { new: true }, function (err, groups) {
-      if (err) return res.status(500).send("There was a problem Finding and updating the group.");
-      res.status(200).send(groups);
-      return;
-    });
+  Group.findByIdAndUpdate(req.params.id, { $push: { media: file_info } }, { new: true }, function (err, groups) {
+    if (err) return res.status(500).send("There was a problem Finding and updating the group.");
+    res.status(200).send(groups);
+    return;
+  });
 
 
   // });
@@ -622,7 +622,7 @@ router.get("/info/media", cors(), (req, res) => {
 });
 
 //delete...
-router.post("/:id/media/del",  cors(), VerifyToken, VerifyAdmin, (req, res) => {
+router.post("/:id/media/del", cors(), VerifyToken, VerifyAdmin, (req, res) => {
 
   Group.findOne({ _id: req.params.id }, function (err, group) {
     // Group.findById(req.params.id, function (err, group) {
@@ -691,28 +691,18 @@ router.post("/:id/media/del",  cors(), VerifyToken, VerifyAdmin, (req, res) => {
 router.get("/:id/sub", cors(), VerifyToken, (req, res) => {
 
 
-  Group.findById(req.params.id, function (err, group) {
-    if (err) return res.status(500).send("There was a problem finding the group.");
-    if (!group) return res.status(404).send("No group found.");
 
-    group.subcribers.push(req.userId);
+  Group.findByIdAndUpdate(req.params.id, { $push: { subcribers: req.userId } }, { new: true }, function (err, groups) {
+    if (err) return res.status(500).send("There was a problem Finding and updating the group.");
 
-    Group.findByIdAndUpdate(req.params.id, { subcribers: group.subcribers }, { new: true }, function (err, groups) {
-      if (err) return res.status(500).send("There was a problem updating the group.");
-
-      User.findById(req.userId, function (err, user) {
-        if (err) return res.status(500).send("There was a problem finding the user.");
-        if (!user) return res.status(404).send("No user found.");
-        user.sub.push(groups._id);
-        User.findByIdAndUpdate(req.userId, { sub: user.sub }, { new: true }, function (err, users) {
-          if (err) return res.status(500).send("There was a problem updating the user.");
-          res.status(200).send(users);
-        });
-      });
-
+    User.findByIdAndUpdate(req.userId, { $push: { sub: groups._id } }, { new: true }, function (err, users) {
+      if (err) return res.status(500).send("There was a problem updating the user.");
+      res.status(200).send(users);
     });
 
+
   });
+
 
 
 });
