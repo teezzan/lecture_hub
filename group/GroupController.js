@@ -646,7 +646,7 @@ router.post("/:id/media/del", cors(), VerifyToken, VerifyAdmin, (req, res) => {
         if (err) return res.status(404).json({ err: err.message });
         // res.redirect("/");
 
-        res.status(200).send(" Deleted file succssfully");
+        res.status(200).send(groups);
       });
 
     });
