@@ -629,12 +629,12 @@ router.get("/:id/media/del/:media_id", cors(), VerifyToken, VerifyAdmin, (req, r
     if (err) return res.status(500).send("There was a problem updating the group.");
 
 
-    // gfs.delete(new mongoose.Types.ObjectId(req.params.media_id), (err, data) => {
-    //   if (err) return res.status(404).json({ err: err.message });
+    gfs.delete(new mongoose.Types.ObjectId(req.params.media_id), (err, data) => {
+      if (err) return res.status(404).json({ err: err.message });
       // res.redirect("/");
 
       res.status(200).send(groups);
-    // });
+    });
 
   });
 });
