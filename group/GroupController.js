@@ -622,7 +622,7 @@ router.get("/info/media", cors(), (req, res) => {
 });
 
 //delete...
-router.post("/:id/media/del/:media_id", cors(), VerifyToken, VerifyAdmin, (req, res) => {
+router.get("/:id/media/del/:media_id", cors(), VerifyToken, VerifyAdmin, (req, res) => {
 
 
     Group.findByIdAndUpdate(req.params.id, {$pull: {media: {id: req.params.media_id}}}, { new: true }, function (err, groups) {
