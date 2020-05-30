@@ -633,7 +633,7 @@ router.get("/:id/media/del/:media_id/:id", cors(), VerifyToken, VerifyAdmin, (re
       if (err) return res.status(404).json({ err: err.message });
       // res.redirect("/");
 
-      res.status(200).send(groups);
+      res.status(200).send("success");
     });
 
   });
