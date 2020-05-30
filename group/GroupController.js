@@ -624,21 +624,8 @@ router.get("/info/media", cors(), (req, res) => {
 //delete...
 router.post("/:id/media/del", cors(), VerifyToken, VerifyAdmin, (req, res) => {
 
-  Group.findOne({ _id: req.params.id }, function (err, group) {
-    // Group.findById(req.params.id, function (err, group) {
-    if (err) return res.status(500).send("There was a problem finding the group.");
 
-    if (!group) {
-      res.status(404).send("No group found. Delete failed");
-      return;
-    }
-
-    if ((group.media.length > req.body.index) && (group.media[req.body.index].id == req.body.media_id)) {
-      group.media.splice(req.body.index, 1);
-    }
-    else { return res.status(500).send("File does not match"); }
-
-    Group.findByIdAndUpdate(req.params.id, { media: group.media }, { new: true }, function (err, groups) {
+    Group.findByIdAndUpdate(req.params.id, {$pull: {media: {id: req.body.media_id}}}, { new: true }, function (err, groups) {
       if (err) return res.status(500).send("There was a problem updating the group.");
 
 
@@ -650,7 +637,6 @@ router.post("/:id/media/del", cors(), VerifyToken, VerifyAdmin, (req, res) => {
       });
 
     });
-  });
 });
 
 
