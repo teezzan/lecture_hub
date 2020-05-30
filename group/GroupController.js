@@ -622,14 +622,14 @@ router.get("/info/media", cors(), (req, res) => {
 });
 
 //delete...
-router.get("/:id/media/del/:media_id", cors(), VerifyToken, VerifyAdmin, (req, res) => {
+router.get("/:id/media/del/:media_id/:id", cors(), VerifyToken, VerifyAdmin, (req, res) => {
 
 
   Group.findByIdAndUpdate(req.params.id, {$pull: {media: {filename: req.params.media_id}}}, function (err, groups) {
     if (err) return res.status(500).send("There was a problem updating the group.");
 
 
-    gfs.delete(new mongoose.Types.ObjectId(req.params.media_id), (err, data) => {
+    gfs.delete(new mongoose.Types.ObjectId(req.params.id), (err, data) => {
       if (err) return res.status(404).json({ err: err.message });
       // res.redirect("/");
 
