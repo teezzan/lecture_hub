@@ -422,7 +422,7 @@ router.get('/', cors(), function (req, res) {
 router.post('/', cors(), function (req, res) {
   // var output =[];
   var query = req.body.query;
-  Group.find({_id: {$in: query}}, { media: 0 }, function (err, group) {
+  Group.find({_id: {$in: ["5ec6ebe7e024cf0017082544","5ec6ebd4e024cf0017082543"]}}, { media: 0 }, function (err, group) {
     if (err) return res.status(500).send("There was a problem finding the groups.");
     res.status(200).send(group);
   });
