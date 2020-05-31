@@ -419,7 +419,7 @@ router.get('/', cors(), function (req, res) {
 
 //get info of certain groups
 // gives list of groups
-router.get('/selected/info', cors(), function (req, res) {
+router.post('/', cors(), function (req, res) {
   // var output =[];
   var query = req.body.query;
   Group.find({_id: {$in: query}}, { media: 0 }, function (err, group) {
