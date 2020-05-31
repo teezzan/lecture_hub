@@ -416,6 +416,18 @@ router.get('/', cors(), function (req, res) {
   });
 });
 
+
+//get info of certain groups
+// gives list of groups
+router.get('/selected/info', cors(), function (req, res) {
+  // var output =[];
+  var query = req.body.query;
+  Group.find({_id: {$in: query}}, { media: 0 }, function (err, group) {
+    if (err) return res.status(500).send("There was a problem finding the groups.");
+    res.status(200).send(group);
+  });
+});
+
 /**
  * @swagger
  *
