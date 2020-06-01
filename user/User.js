@@ -4,6 +4,8 @@ var UserSchema = new mongoose.Schema({
   email: { type: String, unique: true },
   password: String,
   sub: Array,
+  submediacount: Array,
+  adminGroups: Array,
   verified : { type: Boolean, default: true },
   blocked : { type: Boolean, default: false },
   resetPasswordToken : String,
