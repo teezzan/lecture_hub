@@ -159,7 +159,7 @@ router.post('/register', VerifyToken, function (req, res) {
   Group.create({
     name: req.body.name,
     description: req.body.description,
-    admin: JSON.stringify([req.userId]),
+    admin: [req.userId],
     media: [],
     subcribers: []
 
