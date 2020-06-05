@@ -518,7 +518,7 @@ router.get('/finduser/:id', cors(), function (req, res) {
 // });
 
 router.post('/finduser', cors(), function (req, res) {
-  User.find().or([{ username: req.body.tag }, { name: req.body.tag }, { email: req.body.tag }, { _id: req.body.tag }])
+  User.find().or([{ username: req.body.tag }, { name: req.body.tag }, { email: req.body.tag }])
     .select(["-password", "-resetPasswordExpires", "-resetPasswordToken"])
     .then(users => { res.status(200).send(users); })
     .catch(err => { res.status(500).send(err); })
