@@ -230,7 +230,7 @@ router.put('/:id', VerifyToken, VerifyAdmin, function (req, res) {
     return res.status(400).send('Data Incomplete');
   }
   console.log(req.body.admin)
-    Group.findByIdAndUpdate(req.params.id, {$set: { name: req.body.name, description: req.body.description}, $push: {admin:req.body.admin} }, { new: true }, function (err, group) {
+    Group.findByIdAndUpdate(req.params.id, {$set: { name: req.body.name, description: req.body.description}, $push: {admin: "5ed80d3ed64a540017aa57f5"} }, { new: true }, function (err, group) {
       if (err) return res.status(500).send("There was a problem updating the group.");
       res.status(200).send(group);
       return;
