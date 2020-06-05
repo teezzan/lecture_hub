@@ -230,32 +230,22 @@ router.put('/:id', VerifyToken, VerifyAdmin, function (req, res) {
     return res.status(400).send('Data Incomplete');
   }
 
-  Group.findOne({ _id: req.params.id }, function (err, group) {
-    // Group.findById(req.params.id, function (err, group) {
-    if (err) return res.status(500).send("There was a problem finding the group.");
-
-    if (!group) {
-      res.status(404).send("No group found.");
-      return;
-    }
-
-    if (!(JSON.parse([group.admin]).includes(req.userId))) {
-      res.status(401).send("You have no authorization");
-      return;
-    }
-
-
-    Group.findByIdAndUpdate(req.params.id, { name: req.body.name, description: req.body.description }, { new: true }, function (err, group) {
+    Group.findByIdAndUpdate(req.params.id, { name: req.body.name, description: req.body.description, $push: {admin:req.body.admin} }, { new: true }, function (err, group) {
       if (err) return res.status(500).send("There was a problem updating the group.");
       res.status(200).send(group);
       return;
     });
-
-  });
-
-
-
 });
+
+// router.put('/:id', VerifyToken, VerifyAdmin, function (req, res) {
+
+//   if (req.body.name === '' || req.body.description === '') {
+//     return res.status(400).send('Data Incomplete');
+//   }
+//   Group.find({ _id: req.params.id }).push({ admin: req.body.admin })
+//     .then(group => { res.status(200).send(group); })
+//     .catch(err => { res.status(500).send(err); })
+//   });
 
 
 /**

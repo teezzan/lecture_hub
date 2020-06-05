@@ -503,19 +503,6 @@ router.get('/finduser/:id', cors(), function (req, res) {
  *       '403':
  *         description: No user found.
  */
-// username 
-// User.find().or([{ name: param }, { nickname: param }])
-// router.post('/finduser', cors(), function (req, res) {
-//   User.find({$or :[{username: req.body.tag},{name: req.body.tag},{email: req.body.tag},{_id: req.body.tag}] },
-
-
-//     { password: 0, resetPasswordExpires: 0, resetPasswordToken: 0 }, 
-//     function (err, user) {
-//     if (err) return res.status(500).send(err);
-//     if (!user) return res.status(404).send("No user found.");
-//     res.status(200).send(user);
-//   });
-// });
 
 router.post('/finduser', cors(), function (req, res) {
   User.find().or([{ username: req.body.tag }, { name: req.body.tag }, { email: req.body.tag }])
