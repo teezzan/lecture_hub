@@ -231,7 +231,7 @@ router.put('/:id', VerifyToken, VerifyAdmin, function (req, res) {
   }
   console.log(req.body.admin)
     Group.findByIdAndUpdate(req.params.id, {$set: { name: req.body.name, description: req.body.description}, $push: {admin: "5ed80d3ed64a540017aa57f5"} }, { new: true }, function (err, group) {
-      if (err) return res.status(500).send("There was a problem updating the group.");
+      if (err) return res.status(500).send(err);
       res.status(200).send(group);
       return;
     });
