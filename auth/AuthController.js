@@ -235,7 +235,7 @@ router.post('/register', cors(), function (req, res) {
     name: req.body.name,
     email: req.body.email,
     password: hashedPassword,
-    username: `${req.body.name[1]}${req.body.name[0]}${randomint(0,email.length)}`
+    username: `${req.body.name[1]}${req.body.name[0]}${randomint(0,req.body.email.length)}`
   },
     function (err, user) {
       if (err) return res.status(500).send("There was a problem registering the user.");
@@ -472,6 +472,37 @@ router.get('/finduser/:id', cors(), function (req, res) {
   });
 });
 
+
+/**
+ * @swagger
+ * /auth/finduser:
+ *   post:
+ *     tags:
+ *       - Users
+ *     name: Find user
+ *     summary: Finds list of user that satisfy a tag
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: path
+ *         name: tag
+ *         schema:
+ *           type: string
+ *         required:
+ *           - tag
+ *     responses:
+ *       '200':
+ *         description: An array of single user object
+ *         schema:
+ *           type: object
+ *           $ref: '#/definitions/User'
+ *       '500':
+ *         description: Internal server error
+ *       '403':
+ *         description: No user found.
+ */
 // username
 router.post('/finduser', cors(), function (req, res) {
   User.find({$or :[{username: req.body.tag},{name: req.body.tag},{email: req.body.tag},{_id: req.body.tag}] }, { password: 0, resetPasswordExpires: 0, resetPasswordToken: 0 }, function (err, user) {
