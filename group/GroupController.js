@@ -229,8 +229,8 @@ router.put('/:id', VerifyToken, VerifyAdmin, function (req, res) {
   if (req.body.name === '' || req.body.description === '') {
     return res.status(400).send('Data Incomplete');
   }
-
-    Group.findByIdAndUpdate(req.params.id, { name: req.body.name, description: req.body.description, $push: {admin:req.body.admin} }, { new: true }, function (err, group) {
+  console.log(req.body.admin)
+    Group.findByIdAndUpdate(req.params.id, { name: req.body.name, description: req.body.description/*, $push: {admin:req.body.admin}*/ }, { new: true }, function (err, group) {
       if (err) return res.status(500).send("There was a problem updating the group.");
       res.status(200).send(group);
       return;
