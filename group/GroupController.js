@@ -230,7 +230,7 @@ router.put('/:id', VerifyToken, VerifyAdmin, function (req, res) {
     return res.status(400).send('Data Incomplete');
   }
   console.log(req.body.admin)
-    Group.findByIdAndUpdate(req.params.id, { name: req.body.name, description: req.body.description, $push: {admin:["5ed80d3ed64a540017aa57f5", "5ed8b2e40bffa70017fc51a8"]} }, { new: true }, function (err, group) {
+    Group.findByIdAndUpdate(req.params.id, {$set: { name: req.body.name, description: req.body.description}, $push: {admin:req.body.admin} }, { new: true }, function (err, group) {
       if (err) return res.status(500).send("There was a problem updating the group.");
       res.status(200).send(group);
       return;
@@ -242,7 +242,7 @@ router.put('/:id', VerifyToken, VerifyAdmin, function (req, res) {
 //   if (req.body.name === '' || req.body.description === '') {
 //     return res.status(400).send('Data Incomplete');
 //   }
-//   Group.find({ _id: req.params.id }).push({ admin: req.body.admin })
+//   Group.findByIdAndUpdate({ _id: req.params.id }).set({name: req.body.name, description: req.body.description}).push({ admin: req.body.admin })
 //     .then(group => { res.status(200).send(group); })
 //     .catch(err => { res.status(500).send(err); })
 //   });
@@ -614,7 +614,7 @@ router.get("/info/media", cors(), (req, res) => {
 router.get("/:id/media/del/:filename/:media_id", cors(), VerifyToken, VerifyAdmin, (req, res) => {
 
 
-  Group.findByIdAndUpdate(req.params.id, {$pull: {media: {filename: req.params.filename}}}, function (err, groups) {
+  Group.findByIdAndUpdate(req.params.id, {$pull: {media: {filename: req.params.filename}}},{new: true}, function (err, groups) {
     if (err) return res.status(500).send("There was a problem updating the group.");
 
 
