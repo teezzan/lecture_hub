@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var GroupSchema = new mongoose.Schema({  
   name: { type: String, unique: true },
   description: String,
-  admin: String,
+  admin: Array,
   media: Array,
   subcribers : Array,
   blocked : { type: Boolean, default: false }
