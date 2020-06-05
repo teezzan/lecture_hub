@@ -235,7 +235,7 @@ router.post('/register', cors(), function (req, res) {
     name: req.body.name,
     email: req.body.email,
     password: hashedPassword,
-    username: `${req.body.name[1]}${req.body.name[0]}${randomint(0, req.body.email.length)}`
+    username: `${req.body.name[1]}${req.body.name[0]}${randomint(10000, 1000000)}`
   },
     function (err, user) {
       if (err) return res.status(500).send("There was a problem registering the user.");
