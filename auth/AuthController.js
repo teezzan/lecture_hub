@@ -17,7 +17,9 @@ var User = require('../user/User');
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var bcrypt = require('bcryptjs');
 var config = require('../config'); // get config file
-
+function randomint(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
 /**
  * @swagger
@@ -233,6 +235,7 @@ router.post('/register', cors(), function (req, res) {
     name: req.body.name,
     email: req.body.email,
     password: hashedPassword,
+    username: `${req.body.name[1]}${req.body.name[0]}${randomint(0,email.length)}`
   },
     function (err, user) {
       if (err) return res.status(500).send("There was a problem registering the user.");
@@ -469,6 +472,14 @@ router.get('/finduser/:id', cors(), function (req, res) {
   });
 });
 
+// username
+router.post('/finduser', cors(), function (req, res) {
+  User.find({$or :[{name: req.body.tag},{email: req.body.tag},{username: req.body.tag}] }, { password: 0, resetPasswordExpires: 0, resetPasswordToken: 0 }, function (err, user) {
+    if (err) return res.status(500).send("There was a problem finding the user.");
+    if (!user) return res.status(404).send("No user found.");
+    res.status(200).send(user);
+  });
+});
 
 /**
  * @swagger
