@@ -12,7 +12,7 @@ function verifyAdmin(req, res, next) {
                 res.status(404).send("No group found.");
                 return;}
                 
-            if (!(JSON.parse([group.admin]).includes(req.userId))) { 
+            if (!(group.admin.includes(req.userId))) { 
                 res.status(401).send("You have no authorization");
                 // console.log(group.admin)
                 // console.log(req.params.id)

@@ -230,7 +230,8 @@ router.put('/:id', VerifyToken, VerifyAdmin, function (req, res) {
     return res.status(400).send('Data Incomplete');
   }
   console.log(typeof(req.body.admin))
-    Group.findByIdAndUpdate(req.params.id, {$set: { name: req.body.name, description: req.body.description}, $push: {admin:{ $each: req.body.admin }} }, { new: true }, function (err, group) {
+    Group.findByIdAndUpdate(req.params.id,
+       {$set: { name: req.body.name, description: req.body.description}, $push: {admin:{ $each: req.body.admin }} }, { new: true }, function (err, group) {
       if (err) return res.status(500).send(err);
       res.status(200).send(group);
       return;
@@ -295,39 +296,39 @@ router.put('/:id', VerifyToken, VerifyAdmin, function (req, res) {
  */
 
 //edit group info
-router.put('/:id/admin', VerifyToken, VerifyAdmin, function (req, res) {
+// router.put('/:id/admin', VerifyToken, VerifyAdmin, function (req, res) {
 
 
-  Group.findOne({ _id: req.params.id }, function (err, group) {
-    if (err) return res.status(500).send("There was a problem finding the group.");
+//   Group.findOne({ _id: req.params.id }, function (err, group) {
+//     if (err) return res.status(500).send("There was a problem finding the group.");
 
-    if (!group) {
-      res.status(404).send("No group found.");
-      return;
-    }
+//     if (!group) {
+//       res.status(404).send("No group found.");
+//       return;
+//     }
 
-    var new_admin = [group.admin];
-    if (req.admin1 & VerifyUser(req.body.admin1)) {
-      new_admin[1] = req.admin1;
-    }
-    else if (req.admin1 == "") { new_admin[1] = "" }
+//     var new_admin = [group.admin];
+//     if (req.admin1 & VerifyUser(req.body.admin1)) {
+//       new_admin[1] = req.admin1;
+//     }
+//     else if (req.admin1 == "") { new_admin[1] = "" }
 
-    if (req.admin2 & VerifyUser(req.body.admin2)) {
-      new_admin[2] = req.admin2;
-    }
-    else if (req.admin2 == "") { new_admin[2] = "" }
+//     if (req.admin2 & VerifyUser(req.body.admin2)) {
+//       new_admin[2] = req.admin2;
+//     }
+//     else if (req.admin2 == "") { new_admin[2] = "" }
 
-    Group.findByIdAndUpdate(req.params.id, { admin: new_admin }, { new: true }, function (err, group) {
-      if (err) return res.status(500).send("There was a problem updating the group.");
-      res.status(200).send(group);
-      return;
-    });
+//     Group.findByIdAndUpdate(req.params.id, { admin: new_admin }, { new: true }, function (err, group) {
+//       if (err) return res.status(500).send("There was a problem updating the group.");
+//       res.status(200).send(group);
+//       return;
+//     });
 
-  });
+//   });
 
 
 
-});
+// });
 
 
 
