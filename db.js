@@ -13,6 +13,13 @@ mongoose.connect('mongodb+srv://adminlove:t%40ye1234@cluster0-sbitd.mongodb.net/
         console.log(error);
     } else {
         console.log('created successfully');
+        // mongoose.connection.db.dropDatabase((err)=>{
+        //     if (err) {
+        //         console.log(error);
+        //     }else {
+        //         console.log('deleted successfully');
+        //     }
+        // })
     }
 });
 

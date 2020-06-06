@@ -229,9 +229,17 @@ router.put('/:id', VerifyToken, VerifyAdmin, function (req, res) {
   if (req.body.name === '' || req.body.description === '') {
     return res.status(400).send('Data Incomplete');
   }
+  var push = {}
+  var pull = {};
   console.log(typeof(req.body.admin))
+  if(req.body.pushAdmin!= undefined){
+    push = {$push: {admin:{ $each: req.body.pushAdmin }}}
+  }
+  if(req.body.pullAdmin!= undefined){
+    pull = {$pull: {admin:{ $each: req.body.pullAdmin }}}
+  }
     Group.findByIdAndUpdate(req.params.id,
-       {$set: { name: req.body.name, description: req.body.description}, $push: {admin:{ $each: req.body.admin }} }, { new: true }, function (err, group) {
+       {$set: { name: req.body.name, description: req.body.description}, ...pullAdmin, ...pushAdmin }, { new: true }, function (err, group) {
       if (err) return res.status(500).send(err);
       res.status(200).send(group);
       return;
