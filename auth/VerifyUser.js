@@ -3,7 +3,7 @@ var User = require('../user/User');
 var Group = require('../group/Group');
 
 function verifyUser(id) {
-    console.log(id)
+    // console.log(id)
     User.findOne({ _id: id }, function (err, user) {
         // Group.findById(req.params.id, function (err, group) {
             if (err) return false;
