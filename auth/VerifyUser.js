@@ -8,7 +8,7 @@ function verifyUser(id) {
         // Group.findById(req.params.id, function (err, group) {
             if (err) return false;
             if (!user) return false;
-            console.log(user)
+            // console.log(user)
             return true;
     });
         

@@ -168,11 +168,11 @@ router.post('/register', VerifyToken, function (req, res) {
     function (err, group) {
       if (err) return res.status(500).send("There was a problem creating the group`.");
       console.log(group);
-      User.findByIdAndUpdate(req.userId, {$push : {adminGroups: group._id }}, (err, user) => {
-        if(err) return res.status(500).send("There was a problem updating the User.");
+      User.findByIdAndUpdate(req.userId, { $push: { adminGroups: group._id } }, (err, user) => {
+        if (err) return res.status(500).send("There was a problem updating the User.");
         res.status(200).send(group);
-      } );
-     
+      });
+
     });
 
 });
@@ -232,22 +232,22 @@ router.put('/:id', VerifyToken, VerifyAdmin, function (req, res) {
   var push = {}
   var pull = {};
   // console.log(typeof(req.body.admin))
-  if(req.body.pushAdmin!= undefined){
+  if (req.body.pushAdmin != undefined) {
 
     var pushAdmin = [];
-    for(var i=0; i<req.body.pushAdmin.length;i++){
-      if(VerifyUser(req.body.pushAdmin[i])){
+    for (var i = 0; i < req.body.pushAdmin.length; i++) {
+      if (VerifyUser(req.body.pushAdmin[i])) {
         pushAdmin.push(req.body.pushAdmin[i]);
       }
     }
-    push = {$push: {admin:{ $each: pushAdmin }}}
+    push = { $push: { admin: { $each: pushAdmin } } }
     console.log(pushAdmin);
   }
-  else if(req.body.pullAdmin!= undefined){
-    pull = {$pull: {admin:{ $in: req.body.pullAdmin }}}
+  else if (req.body.pullAdmin != undefined) {
+    pull = { $pull: { admin: { $in: req.body.pullAdmin } } }
   }
-    Group.findByIdAndUpdate(req.params.id,
-       {$set: { name: req.body.name, description: req.body.description}, ...push, ...pull }, { new: true }, function (err, group) {
+  Group.findByIdAndUpdate(req.params.id,
+    { $set: { name: req.body.name, description: req.body.description }, ...push, ...pull }, { new: true }, function (err, group) {
       if (err) return res.status(500).send(err);
       res.status(200).send(group);
       return;
@@ -380,15 +380,15 @@ router.put('/:id', VerifyToken, VerifyAdmin, function (req, res) {
 //delete group
 router.delete('/:id', VerifyToken, VerifyAdmin, function (req, res) {
 
-    Group.findByIdAndRemove(req.params.id, function (err, group) {
-      if (err) return res.status(500).send("There was a problem deleting the group.");
-      User.findByIdAndUpdate(req.userId,{$pull: {adminGroups: group._id}}, (err, user) => {
+  Group.findByIdAndRemove(req.params.id, function (err, group) {
+    if (err) return res.status(500).send("There was a problem deleting the group.");
+    User.findByIdAndUpdate(req.userId, { $pull: { adminGroups: group._id } }, (err, user) => {
       if (err) return res.status(500).send("There was a problem updating user.");
-         res.status(200).send("group was deleted."); 
-      })
-      
-    });
-  
+      res.status(200).send("group was deleted.");
+    })
+
+  });
+
 });
 
 
@@ -431,7 +431,7 @@ router.get('/', cors(), function (req, res) {
 router.post('/', cors(), function (req, res) {
   // var output =[];
   var query = req.body.query;
-  Group.find({_id: {$in: query}}, { media: 0 }, function (err, group) {
+  Group.find({ _id: { $in: query } }, { media: 0 }, function (err, group) {
     if (err) return res.status(500).send("There was a problem finding the groups.");
     res.status(200).send(group);
   });
@@ -530,8 +530,8 @@ router.get('/:id', cors(), function (req, res, next) {
 
 
 //vanilla upload or not 
-router.post("/:id/upload", cors(),  VerifyToken, VerifyAdmin, upload.single("file"), (req, res) => {
-  
+router.post("/:id/upload", cors(), VerifyToken, VerifyAdmin, upload.single("file"), (req, res) => {
+
   var file_info = {
     title: req.body.title,
     lecturer: req.body.lecturer,
@@ -631,7 +631,7 @@ router.get("/info/media", cors(), (req, res) => {
 router.get("/:id/media/del/:filename/:media_id", cors(), VerifyToken, VerifyAdmin, (req, res) => {
 
 
-  Group.findByIdAndUpdate(req.params.id, {$pull: {media: {filename: req.params.filename}}},{new: true}, function (err, groups) {
+  Group.findByIdAndUpdate(req.params.id, { $pull: { media: { filename: req.params.filename } } }, { new: true }, function (err, groups) {
     if (err) return res.status(500).send("There was a problem updating the group.");
 
 
