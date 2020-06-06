@@ -233,9 +233,12 @@ router.put('/:id', VerifyToken, VerifyAdmin, function (req, res) {
   var pull = {};
   // console.log(typeof(req.body.admin))
   if(req.body.pushAdmin!= undefined){
-    push = {$push: {admin:{ $each: req.body.pushAdmin }}}
+    var pushAdmin = req.body.pushAdmin.filter(function(item) {
+      return VerifyUser(item);
+    })
+    push = {$push: {admin:{ $each: pushAdmin }}}
   }
-  if(req.body.pullAdmin!= undefined){
+  else if(req.body.pullAdmin!= undefined){
     pull = {$pull: {admin:{ $in: req.body.pullAdmin }}}
   }
     Group.findByIdAndUpdate(req.params.id,
