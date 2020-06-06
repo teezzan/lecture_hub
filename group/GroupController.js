@@ -221,7 +221,10 @@ router.post('/register', VerifyToken, function (req, res) {
  *         description: email required
  *         
  */
-
+async function veruse(id) {
+  var result = await VerifyUser(id);
+  return result
+}
 
 //edit group info
 router.put('/:id', VerifyToken, VerifyAdmin, function (req, res) {
@@ -236,7 +239,8 @@ router.put('/:id', VerifyToken, VerifyAdmin, function (req, res) {
 
     var pushAdmin = [];
     for (var i = 0; i < req.body.pushAdmin.length; i++) {
-      if (VerifyUser(req.body.pushAdmin[i])) {
+
+      if (veruse(req.body.pushAdmin[i])) {
         pushAdmin.push(req.body.pushAdmin[i]);
       }
     }
