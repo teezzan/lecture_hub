@@ -231,7 +231,7 @@ router.put('/:id', VerifyToken, VerifyAdmin, function (req, res) {
   }
   var push = {}
   var pull = {};
-  console.log(typeof(req.body.admin))
+  // console.log(typeof(req.body.admin))
   if(req.body.pushAdmin!= undefined){
     push = {$push: {admin:{ $each: req.body.pushAdmin }}}
   }
@@ -239,7 +239,7 @@ router.put('/:id', VerifyToken, VerifyAdmin, function (req, res) {
     pull = {$pull: {admin:{ $each: req.body.pullAdmin }}}
   }
     Group.findByIdAndUpdate(req.params.id,
-       {$set: { name: req.body.name, description: req.body.description}, ...pullAdmin, ...pushAdmin }, { new: true }, function (err, group) {
+       {$set: { name: req.body.name, description: req.body.description}, ...push, ...pull }, { new: true }, function (err, group) {
       if (err) return res.status(500).send(err);
       res.status(200).send(group);
       return;
