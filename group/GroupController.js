@@ -237,6 +237,7 @@ router.put('/:id', VerifyToken, VerifyAdmin, function (req, res) {
       return VerifyUser(item);
     })
     push = {$push: {admin:{ $each: pushAdmin }}}
+    console.log(pushAdmin);
   }
   else if(req.body.pullAdmin!= undefined){
     pull = {$pull: {admin:{ $in: req.body.pullAdmin }}}
