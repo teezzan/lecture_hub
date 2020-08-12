@@ -621,14 +621,14 @@ router.get("/media/:filename", cors(),// VerifyToken,
 
     gfs.find({
       filename: req.params.filename
-    }, function (err, file) {
+    }).toArray((err, file) => {
       if (err) {
         console.log("err")
         return res.status(400).send({
           err: errorHandler.getErrorMessage(err)
         });
       }
-      if (!file) {
+      if (!file || file.length === 0) {
         console.log("'No file found'")
 
         return res.status(404).send({
@@ -671,6 +671,7 @@ router.get("/media/:filename", cors(),// VerifyToken,
           filename: req.params.filename
         }).pipe(res);
       }
+
     });
 
 
