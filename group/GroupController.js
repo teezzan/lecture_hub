@@ -599,23 +599,23 @@ router.post("/:id/upload", cors(), VerifyToken, VerifyAdmin, upload.single("file
 
 
 //Vanilla for getting and downloading from common repo 
-// router.get("/media/:filename", cors(),// VerifyToken, 
-//   (req, res) => {
-//     const file = gfs
-//       .find({
-//         filename: req.params.filename
-//       })
-//       .toArray((err, files) => {
-//         if (!files || files.length === 0) {
-//           return res.status(404).json({
-//             err: "no files exist"
-//           });
-//         }
-//         gfs.openDownloadStreamByName(req.params.filename).pipe(res);
-//       });
-//   });
+ router.get("/media/:filename", cors(),// VerifyToken, 
+   (req, res) => {
+     const file = gfs
+       .find({
+         filename: req.params.filename
+       })
+       .toArray((err, files) => {
+         if (!files || files.length === 0) {
+           return res.status(404).json({
+             err: "no files exist"
+           });
+         }
+         gfs.openDownloadStreamByName(req.params.filename).pipe(res);
+       });
+   });
 
-router.get("/media/:filename", cors(),// VerifyToken, 
+router.get("/mediaa/:filename", cors(),// VerifyToken, 
   (req, res) => {
     console.log("entered first")
 
