@@ -654,22 +654,18 @@ router.get("/media/:filename", cors(),// VerifyToken,
           'Content-Type': file.contentType
         });
 
-        gfs.createReadStream({
-          filename: req.params.filename,
-          range: {
-            startPos: start,
-            endPos: end
-          }
-        }).pipe(res);
+
+gfs.openDownloadStreamByName(req.params.filename,
+     	 { start: start, end:end }).pipe(res);
+
       } else {
         console.log("entered last one")
 
         res.header('Content-Length', file.length);
         res.header('Content-Type', file.contentType);
 
-        gfs.createReadStream({
-          filename: req.params.filename
-        }).pipe(res);
+	gfs.openDownloadStreamByName(req.params.filename).pipe(res);
+
       }
 
     });
