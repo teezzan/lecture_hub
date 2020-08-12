@@ -616,6 +616,57 @@ router.get("/media/:filename", cors(),// VerifyToken,
   });
 
 
+//   function(req, res) {
+//     var id = req.modelName._id;
+
+//     gfs.findOne({
+//         _id: id
+//     }, function(err, file) {
+//         if (err) {
+//             return res.status(400).send({
+//                 err: errorHandler.getErrorMessage(err)
+//             });
+//         }
+//         if (!file) {
+//             return res.status(404).send({
+//                 err: 'No se encontró el registro especificado.'
+//             });
+//         }
+
+//         if (req.headers['range']) {
+//             var parts = req.headers['range'].replace(/bytes=/, "").split("-");
+//             var partialstart = parts[0];
+//             var partialend = parts[1];
+
+//             var start = parseInt(partialstart, 10);
+//             var end = partialend ? parseInt(partialend, 10) : file.length - 1;
+//             var chunksize = (end - start) + 1;
+
+//             res.writeHead(206, {
+//                 'Accept-Ranges': 'bytes',
+//                 'Content-Length': chunksize,
+//                 'Content-Range': 'bytes ' + start + '-' + end + '/' + file.length,
+//                 'Content-Type': file.contentType
+//             });
+
+//             gfs.createReadStream({
+//                 _id: file._id,
+//                 range: {
+//                     startPos: start,
+//                     endPos: end
+//                 }
+//             }).pipe(res);
+//         } else {
+//             res.header('Content-Length', file.length);
+//             res.header('Content-Type', file.contentType);
+
+//             gfs.createReadStream({
+//                 _id: file._id
+//             }).pipe(res);
+//         }
+//     });
+// };
+
 
 //get list of media vanilla. not exposed
 router.get("/info/media", cors(), (req, res) => {

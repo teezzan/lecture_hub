@@ -4,8 +4,8 @@ const multer = require("multer");
 const GridFsStorage = require("multer-gridfs-storage");
 // const db = process.env.MONGODB_URL;
 //mongodb+srv://adminlove:t%40ye1234@cluster0-sbitd.mongodb.net/test?retryWrites=true&w=majority
-mongoose.connect('mongodb+srv://adminlove:t%40ye1234@cluster0-sbitd.mongodb.net/test?retryWrites=true&w=majority', {
-// mongoose.connect('mongodb://localhost:27017/mydbtest', {
+// mongoose.connect('mongodb+srv://adminlove:t%40ye1234@cluster0-sbitd.mongodb.net/test?retryWrites=true&w=majority', {
+mongoose.connect('mongodb://localhost:27017/mydbtest', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }, (error) => {
