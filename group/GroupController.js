@@ -617,22 +617,28 @@ router.post("/:id/upload", cors(), VerifyToken, VerifyAdmin, upload.single("file
 
 router.get("/media/:filename", cors(),// VerifyToken, 
   (req, res) => {
-
+    console.log("entered first")
+    range
     gfs.find({
       filename: req.params.filename
     }, function (err, file) {
       if (err) {
+        console.log("err")
         return res.status(400).send({
           err: errorHandler.getErrorMessage(err)
         });
       }
       if (!file) {
+        console.log("'No file found'")
+
         return res.status(404).send({
           err: 'No file found'
         });
       }
 
       if (req.headers['range']) {
+        console.log("entered range")
+
         var parts = req.headers['range'].replace(/bytes=/, "").split("-");
         var partialstart = parts[0];
         var partialend = parts[1];
@@ -656,6 +662,8 @@ router.get("/media/:filename", cors(),// VerifyToken,
           }
         }).pipe(res);
       } else {
+        console.log("entered last one")
+
         res.header('Content-Length', file.length);
         res.header('Content-Type', file.contentType);
 
