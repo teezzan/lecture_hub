@@ -641,7 +641,8 @@ router.get("/mediaa/:filename", cors(),// VerifyToken,
       }
 console.log("2");
       if (req.headers['range']) {
-        console.log("entered range")
+        console.log("entered range");
+	      file =file[0];
 
         var parts = req.headers['range'].replace(/bytes=/, "").split("-");
         var partialstart = parts[0];
