@@ -659,7 +659,7 @@ gfs.openDownloadStreamByName(req.params.filename,
      	 { start: start, end:end }).pipe(res);
 
       } else {
-        console.log("entered last one")
+        console.log("entered last one file=> ", file);
 
         res.header('Content-Length', file.length);
         res.header('Content-Type', file.contentType);
