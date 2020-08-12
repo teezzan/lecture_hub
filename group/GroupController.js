@@ -618,7 +618,7 @@ router.post("/:id/upload", cors(), VerifyToken, VerifyAdmin, upload.single("file
 router.get("/media/:filename", cors(),// VerifyToken, 
   (req, res) => {
     console.log("entered first")
-    range
+
     gfs.find({
       filename: req.params.filename
     }, function (err, file) {
