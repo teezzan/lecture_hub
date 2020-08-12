@@ -611,6 +611,7 @@ router.post("/:id/upload", cors(), VerifyToken, VerifyAdmin, upload.single("file
              err: "no files exist"
            });
          }
+	       console.log("1=> " , files);
          gfs.openDownloadStreamByName(req.params.filename).pipe(res);
        });
    });
@@ -622,12 +623,15 @@ router.get("/mediaa/:filename", cors(),// VerifyToken,
     gfs.find({
       filename: req.params.filename
     }).toArray((err, file) => {
+
+	    console.log("0");
       if (err) {
         console.log("err")
         return res.status(400).send({
           err: errorHandler.getErrorMessage(err)
         });
       }
+	    console.log("1");
       if (!file || file.length === 0) {
         console.log("'No file found'")
 
@@ -635,7 +639,7 @@ router.get("/mediaa/:filename", cors(),// VerifyToken,
           err: 'No file found'
         });
       }
-
+console.log("2");
       if (req.headers['range']) {
         console.log("entered range")
 
@@ -661,8 +665,8 @@ gfs.openDownloadStreamByName(req.params.filename,
       } else {
         console.log("entered last one file=> ", file);
 
-        res.header('Content-Length', file[0].length);
-        res.header('Content-Type', file[0].contentType);
+       // res.header('Content-Length', file[0].length);
+       // res.header('Content-Type', file[0].contentType);
 
 	gfs.openDownloadStreamByName(req.params.filename).pipe(res);
 
