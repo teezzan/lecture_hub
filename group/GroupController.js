@@ -651,7 +651,7 @@ console.log("2");
         var start = parseInt(partialstart, 10);
         var end = partialend ? parseInt(partialend, 10) : file.length - 1;
         var chunksize = (end - start) + 1;
-
+	console.log("bything");
         res.writeHead(206, {
           'Accept-Ranges': 'bytes',
           'Content-Length': chunksize,
@@ -664,7 +664,7 @@ gfs.openDownloadStreamByName(req.params.filename,
      	 { start: start, end:end }).pipe(res);
 
       } else {
-        console.log("entered last one file=> ", file);
+        console.log("entered last");
 
        // res.header('Content-Length', file[0].length);
        // res.header('Content-Type', file[0].contentType);
