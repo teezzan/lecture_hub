@@ -641,7 +641,7 @@ router.get("/mediaa/:filename", cors(),// VerifyToken,
       }
 console.log("2");
       if (req.headers['range']) {
-        console.log("entered range");
+        console.log(req.headers.range);
 	      file =file[0];
 
         var parts = req.headers['range'].replace(/bytes=/, "").split("-");
@@ -651,7 +651,7 @@ console.log("2");
         var start = parseInt(partialstart, 10);
         var end = partialend ? parseInt(partialend, 10) : file.length - 1;
         var chunksize = (end - start) + 1;
-	console.log("bything");
+//	console.log("bything");
         res.writeHead(206, {
           'Accept-Ranges': 'bytes',
           'Content-Length': chunksize,
@@ -683,8 +683,8 @@ let downloadStream = gfs.openDownloadStreamByName(req.params.filename,
       } else {
         console.log("entered last");
 
-       // res.header('Content-Length', file[0].length);
-       // res.header('Content-Type', file[0].contentType);
+        res.header('Content-Length', file[0].length);
+        res.header('Content-Type', file[0].contentType);
 
 	gfs.openDownloadStreamByName(req.params.filename).pipe(res);
 
