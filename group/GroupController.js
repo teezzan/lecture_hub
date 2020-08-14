@@ -611,7 +611,7 @@ router.get("/media/:filename", cors(),// VerifyToken,
             err: "no files exist"
           });
         }
-        console.log("1=> ", files);
+        console.log("1=> lala");
         gfs.openDownloadStreamByName(req.params.filename).pipe(res);
       });
   });
@@ -623,15 +623,13 @@ router.get("/mediaa/:filename", cors(),// VerifyToken,
     gfs.find({
       filename: req.params.filename
     }).toArray((err, file) => {
-
-      console.log("0");
+      console.log("file => ", file)
       if (err) {
         console.log("err")
         return res.status(400).send({
           err: errorHandler.getErrorMessage(err)
         });
       }
-      console.log("1");
       if (!file || file.length === 0) {
         console.log("'No file found'")
 
@@ -639,9 +637,10 @@ router.get("/mediaa/:filename", cors(),// VerifyToken,
           err: 'No file found'
         });
       }
-      console.log("2");
       if (req.headers['range']) {
-        console.log(req.headers.range);
+        console.log("entered chunk");
+
+        // console.log(req.headers['range']);
         file = file[0];
 
         var parts = req.headers['range'].replace(/bytes=/, "").split("-");
@@ -664,39 +663,29 @@ router.get("/mediaa/:filename", cors(),// VerifyToken,
 
 
         let downloadStream = gfs.openDownloadStreamByName(req.params.filename,
-          { start: start, end: end });
+          { start: start }).end(end);
 
-        downloadStream.on('error', (err) => {
-          console.log("Received Error stream")
-          res.end();
-        })
 
-        downloadStream.on('end', () => {
-          console.log("Received End stream");
-          res.end();
-        })
         console.log("start streaming");
-        downloadStream.pipe(res)
-
-
-
+        downloadStream.pipe(res);
+        // downloadStream.on('data', function (data) {
+        //   res.write(data);
+        //   console.log("data here oo")
+        // });
       } else {
         console.log("entered last");
-
         res.header('Content-Length', file[0].length);
         res.header('Content-Type', file[0].contentType);
 
         gfs.openDownloadStreamByName(req.params.filename).pipe(res);
 
       }
-      console.log("in patapat");
-      //	    res.end();
     });
-    console.log("out patapat");
-    //res.end();
 
   });
 console.log("got out");
+
+
 
 //get list of media vanilla. not exposed
 router.get("/info/media", cors(), (req, res) => {
@@ -849,3 +838,5 @@ router.get("/:id/unsub", cors(), VerifyToken, (req, res) => {
 /////////////////////////////////
 
 module.exports = router;
+
+
