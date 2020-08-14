@@ -656,7 +656,10 @@ console.log("2");
           'Accept-Ranges': 'bytes',
           'Content-Length': chunksize,
           'Content-Range': 'bytes ' + start + '-' + end + '/' + file.length,
-          'Content-Type': file.contentType
+          'Content-Type': file.contentType,
+	  'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires' 0
         });
 
 
