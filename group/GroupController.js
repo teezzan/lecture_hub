@@ -599,22 +599,22 @@ router.post("/:id/upload", cors(), VerifyToken, VerifyAdmin, upload.single("file
 
 
 //Vanilla for getting and downloading from common repo 
- router.get("/media/:filename", cors(),// VerifyToken, 
-   (req, res) => {
-     const file = gfs
-       .find({
-         filename: req.params.filename
-       })
-       .toArray((err, files) => {
-         if (!files || files.length === 0) {
-           return res.status(404).json({
-             err: "no files exist"
-           });
-         }
-	       console.log("1=> " , files);
-         gfs.openDownloadStreamByName(req.params.filename).pipe(res);
-       });
-   });
+router.get("/media/:filename", cors(),// VerifyToken, 
+  (req, res) => {
+    const file = gfs
+      .find({
+        filename: req.params.filename
+      })
+      .toArray((err, files) => {
+        if (!files || files.length === 0) {
+          return res.status(404).json({
+            err: "no files exist"
+          });
+        }
+        console.log("1=> ", files);
+        gfs.openDownloadStreamByName(req.params.filename).pipe(res);
+      });
+  });
 
 router.get("/mediaa/:filename", cors(),// VerifyToken, 
   (req, res) => {
@@ -624,14 +624,14 @@ router.get("/mediaa/:filename", cors(),// VerifyToken,
       filename: req.params.filename
     }).toArray((err, file) => {
 
-	    console.log("0");
+      console.log("0");
       if (err) {
         console.log("err")
         return res.status(400).send({
           err: errorHandler.getErrorMessage(err)
         });
       }
-	    console.log("1");
+      console.log("1");
       if (!file || file.length === 0) {
         console.log("'No file found'")
 
@@ -639,10 +639,10 @@ router.get("/mediaa/:filename", cors(),// VerifyToken,
           err: 'No file found'
         });
       }
-console.log("2");
+      console.log("2");
       if (req.headers['range']) {
         console.log(req.headers.range);
-	      file =file[0];
+        file = file[0];
 
         var parts = req.headers['range'].replace(/bytes=/, "").split("-");
         var partialstart = parts[0];
@@ -651,32 +651,32 @@ console.log("2");
         var start = parseInt(partialstart, 10);
         var end = partialend ? parseInt(partialend, 10) : file.length - 1;
         var chunksize = (end - start) + 1;
-//	console.log("bything");
+        //	console.log("bything");
         res.writeHead(206, {
           'Accept-Ranges': 'bytes',
           'Content-Length': chunksize,
           'Content-Range': 'bytes ' + start + '-' + end + '/' + file.length,
           'Content-Type': file.contentType,
-	  'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
           'Pragma': 'no-cache',
           'Expires': 0
         });
 
 
-let downloadStream = gfs.openDownloadStreamByName(req.params.filename,
-     	 { start: start, end:end });
+        let downloadStream = gfs.openDownloadStreamByName(req.params.filename,
+          { start: start, end: end });
 
-            downloadStream.on('error', (err) => {
-             console.log("Received Error stream")
-             res.end();
-            })
+        downloadStream.on('error', (err) => {
+          console.log("Received Error stream")
+          res.end();
+        })
 
-            downloadStream.on('end', () => {
-        console.log("Received End stream");
-        res.end();
-            })
-            console.log("start streaming");
-            downloadStream.pipe(res)
+        downloadStream.on('end', () => {
+          console.log("Received End stream");
+          res.end();
+        })
+        console.log("start streaming");
+        downloadStream.pipe(res)
 
 
 
@@ -686,14 +686,14 @@ let downloadStream = gfs.openDownloadStreamByName(req.params.filename,
         res.header('Content-Length', file[0].length);
         res.header('Content-Type', file[0].contentType);
 
-	gfs.openDownloadStreamByName(req.params.filename).pipe(res);
+        gfs.openDownloadStreamByName(req.params.filename).pipe(res);
 
       }
-console.log("in patapat");
-//	    res.end();
+      console.log("in patapat");
+      //	    res.end();
     });
-console.log("out patapat");
-//res.end();
+    console.log("out patapat");
+    //res.end();
 
   });
 console.log("got out");
