@@ -689,9 +689,9 @@ let downloadStream = gfs.openDownloadStreamByName(req.params.filename,
 	gfs.openDownloadStreamByName(req.params.filename).pipe(res);
 
       }
-
+console.log("in patapat");
     });
-
+console.log("out patapat");
 
 
   });
