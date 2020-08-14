@@ -4,12 +4,13 @@ var checkLang = (inputText) => {
     if (inputText !== undefined || inputText !== null) {
 
         inputText = inputText.toLowerCase();
-        var yoruba = ['yoruba']
-        var hausa = ['hausa']
+        var yoruba = ['yoruba', 'ilorin']
+        var hausa = ['hausa', "kano", "sokoto", "kaduna"]
         var english = ['english']
         var arabic = ['arabic']
         var ighala = ['ighala']
         var nupe = ['nupe']
+        var ebira = ['ebira']
         if (inputText.includes(english)) {
             return "English";
         }
@@ -36,28 +37,6 @@ var checkLang = (inputText) => {
 }
 let Total = 0;
 
-// for (i = 0; i < tee.length; i++) {
-//     console.log(`Starting ${tee[i].title} `)
-//     console.log(` `)
-//     try {
-//         for (j = 0; j < tee[i].topics.length; j++) {
-//             if (typeof (tee[i].topics[j].media) === 'object') {
-
-//                 for (k = 0; k < tee[i].topics[j].media.length; k++) {
-
-//                     console.log(`Title- ${tee[i].topics[j].media[k].title} Lang- ${checkLang(tee[i].topics[j].media[k].title)}`)
-
-//                 }
-//             }
-//             else {
-//                 console.log(`Track- ${tee[i].topics[j].title} Lang- ${checkLang(tee[i].topics[j].media)}`)
-//             }
-//         }
-//     }
-//     catch{
-//         console.log("error @ ", " i =", i, " j =", j, " k =", k)
-//     }
-// }
 
 for (i = 0; i < tee.length; i++) {
     console.log(`Title: ${tee[i].title}, No: ${tee[i].topics.length}`);
@@ -71,6 +50,8 @@ for (i = 0; i < tee.length; i++) {
             for (let k = 0; k < tee[i].topics[j].media.length; k++) {
                 console.log(`Album Track ${k + 1} ===> ${tee[i].topics[j].media[k].title}`)
                 Total = Total + 1;
+                //create a new Object in mongodb
+
             }
             console.log(`<==========+++++++++++++========>`)
 
