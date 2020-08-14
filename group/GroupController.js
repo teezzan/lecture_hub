@@ -659,7 +659,7 @@ console.log("2");
           'Content-Type': file.contentType,
 	  'Cache-Control': 'no-cache, no-store, must-revalidate',
           'Pragma': 'no-cache',
-          'Expires' 0
+          'Expires': 0
         });
 
 
