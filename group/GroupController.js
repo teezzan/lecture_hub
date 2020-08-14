@@ -695,7 +695,7 @@ console.log("out patapat");
 
 
   });
-
+console.log("got out");
 
 //get list of media vanilla. not exposed
 router.get("/info/media", cors(), (req, res) => {
