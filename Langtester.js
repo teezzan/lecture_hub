@@ -34,8 +34,7 @@ var checkLang = (inputText) => {
     }
     return "No Input"
 }
-let i, j, k = 0;
-
+let Total = 0;
 
 // for (i = 0; i < tee.length; i++) {
 //     console.log(`Starting ${tee[i].title} `)
@@ -67,9 +66,18 @@ for (i = 0; i < tee.length; i++) {
         console.log(`tee[${i}].topics[${j}]`);
         console.log(tee[i].topics[j].title)
         if (tee[i].topics[j].type == "album" && tee[i].topics[j].media !== null) {
-            console.log("No Media = ", tee[i].topics[j].media.length)
+            console.log("No Media = ", tee[i].topics[j].media.length);
+            //print out each media of each topic
+            for (let k = 0; k < tee[i].topics[j].media.length; k++) {
+                console.log(`Album Track ${k + 1} ===> ${tee[i].topics[j].media[k].title}`)
+                Total = Total + 1;
+            }
+            console.log(`<==========+++++++++++++========>`)
+
         } else if (tee[i].topics[j].type == "track" && tee[i].topics[j].media !== null) {
-            console.log("track. Single")
+
+            console.log(`Single Track===> ${tee[i].topics[j].title}`)
+            Total = Total + 1;
         }
         else {
             console.log("null Media")
@@ -78,3 +86,4 @@ for (i = 0; i < tee.length; i++) {
     }
     console.log("<    ____    _____     ____>")
 }
+console.log("Total Audio = ", Total);
