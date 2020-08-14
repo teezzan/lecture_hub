@@ -690,10 +690,10 @@ let downloadStream = gfs.openDownloadStreamByName(req.params.filename,
 
       }
 console.log("in patapat");
-	    res.end();
+//	    res.end();
     });
 console.log("out patapat");
-res.end();
+//res.end();
 
   });
 console.log("got out");
