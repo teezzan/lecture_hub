@@ -660,8 +660,22 @@ console.log("2");
         });
 
 
-gfs.openDownloadStreamByName(req.params.filename,
-     	 { start: start, end:end }).pipe(res);
+let downloadStream = gfs.openDownloadStreamByName(req.params.filename,
+     	 { start: start, end:end });
+
+            downloadStream.on('error', (err) => {
+             console.log("Received Error stream")
+             res.end();
+            })
+
+            downloadStream.on('end', () => {
+        console.log("Received End stream");
+        res.end();
+            })
+            console.log("start streaming");
+            downloadStream.pipe(res)
+
+
 
       } else {
         console.log("entered last");
