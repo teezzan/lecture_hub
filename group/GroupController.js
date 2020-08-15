@@ -6,6 +6,7 @@ var cors = require('cors')
 var VerifyToken = require('../auth/VerifyToken');
 var VerifyAdmin = require('../auth/VerifyAdmin');
 var VerifyUser = require('../auth/VerifyUser');
+let mediarects = require('./mediarects.json');
 
 
 router.use(bodyParser.urlencoded({ extended: false }));
@@ -37,6 +38,9 @@ const conn = mongoose.createConnection(mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
+function randomint(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
 
 /**
@@ -611,8 +615,11 @@ router.get("/media/:filename", cors(),// VerifyToken,
             err: "no files exist"
           });
         }
-        console.log("1=> lala");
-        gfs.openDownloadStreamByName(req.params.filename).pipe(res);
+        // console.log("1=> lala");
+        // gfs.openDownloadStreamByName(req.params.filename).pipe(res);
+        //redirect
+        res.redirect(`http://${mediarects.media[randomint(0, mediarects.media.length - 1)].link}`);
+
       });
   });
 
