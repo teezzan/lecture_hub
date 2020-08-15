@@ -47,11 +47,10 @@ for (i = 0; i < tee.length; i++) {
         if (tee[i].topics[j].type == "album" && tee[i].topics[j].media !== null) {
             console.log("No Media = ", tee[i].topics[j].media.length);
             //print out each media of each topic
+            //create new Object for Album. It contains the Tag, the Language. Try to Use the media to get the language
             for (let k = 0; k < tee[i].topics[j].media.length; k++) {
                 console.log(`Album Track ${k + 1} ===> ${tee[i].topics[j].media[k].title}`)
                 Total = Total + 1;
-                //create a new Object in mongodb
-
             }
             console.log(`<==========+++++++++++++========>`)
 
