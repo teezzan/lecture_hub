@@ -450,13 +450,28 @@ router.post('/', cors(), function (req, res) {
 });
 
 router.get('/search/:key', cors(), function (req, res) {
-  Group.find({ name: { $regex: req.params.key } }, { media: 0, subcribers: 0 }, function (err, group) {
-    if (err) return res.status(500).send("There was a problem finding the groups.");
-    res.status(200).send(group);
-  });
+  try {
+    Group.paginate({
+      query: { name: { $regex: req.params.key } },
+      limit: req.query.limit === null ? 5 : parseInt(req.query.limit), // Upper limit,
+      next: req.query.next === null ? "" : req.query.next,
+      prev: req.query.prev === null ? "" : req.query.prev,
+    }).then((result) => {
+      for (let i = 0; i < result.results.length; i++) {
+        result.results[i].media = [];
+        result.results[i].subcribers = [];
+      }
+      res.json(result);
+    })
+  } catch (err) {
+    // next(err);
+    console.log("errrorrrr")
+    res.status(501).send(err.message);
+  }
 });
+
 //http://localhost:3000/api/group/myobjects?limit=5&next=eyIkb2lkIjoiNWVjNTljYTYwN2RmMDAxYjZiOWE0MjEyIn0
-router.get('/myobjects', async (req, res, next) => {
+router.get('/page', async (req, res, next) => {
   try {
     Group.paginate({
       limit: req.query.limit === null ? 5 : parseInt(req.query.limit), // Upper limit,
