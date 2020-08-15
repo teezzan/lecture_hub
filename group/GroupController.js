@@ -455,6 +455,28 @@ router.get('/search/:key', cors(), function (req, res) {
   });
 });
 
+router.get('/myobjects', async (req, res, next) => {
+  try {
+    const result = await MongoPaging.findWithReq(req, db.collection('group'), {
+      query: {
+        //userId: req.user._id
+      },
+      fields: {
+        _id: 1,
+        name: 1,
+        description: 1,
+        admin: 1,
+        blocked: 1
+      },
+      limit: 3 // Upper limit
+    });
+    res.json(result);
+  } catch (err) {
+    // next(err);
+    res.status(501).send(err);
+  }
+});
+
 
 /**
  * @swagger
