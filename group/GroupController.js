@@ -425,9 +425,12 @@ router.delete('/:id', VerifyToken, VerifyAdmin, function (req, res) {
  */
 
 
-// gives list of groups
+// gives list of groups 
+
+
+//needs pagination
 router.get('/', cors(), function (req, res) {
-  Group.find({}, { media: 0 }, function (err, group) {
+  Group.find({}, { media: 0, subcribers: 0 }, function (err, group) {
     if (err) return res.status(500).send("There was a problem finding the groups.");
     res.status(200).send(group);
   });
@@ -444,6 +447,14 @@ router.post('/', cors(), function (req, res) {
     res.status(200).send(group);
   });
 });
+
+router.get('/search/:key', cors(), function (req, res) {
+  Group.find({ name: req.params.key }, { media: 0, subcribers: 0 }, function (err, group) {
+    if (err) return res.status(500).send("There was a problem finding the groups.");
+    res.status(200).send(group);
+  });
+});
+
 
 /**
  * @swagger
